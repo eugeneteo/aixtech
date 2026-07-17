@@ -23,6 +23,11 @@ export const THEMES: Theme[] = [
     label: 'Apple',
     description: 'Frosted glass over a deep sky gradient.',
   },
+  {
+    id: 'aurora',
+    label: 'Aurora Glass',
+    description: 'Refined frosted glass with a vivid aurora glow over deep navy.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';

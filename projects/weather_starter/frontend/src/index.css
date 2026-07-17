@@ -23,6 +23,18 @@ body {
   background-repeat: no-repeat;
 }
 
+/* Theme: aurora glass (refined glass over a vivid aurora on deep navy). */
+[data-theme='aurora'] body {
+  @apply text-white;
+  background:
+    radial-gradient(70% 55% at 15% 8%, rgba(56, 189, 248, 0.28) 0%, transparent 60%),
+    radial-gradient(65% 60% at 85% 18%, rgba(168, 85, 247, 0.30) 0%, transparent 60%),
+    radial-gradient(85% 70% at 60% 100%, rgba(16, 185, 129, 0.28) 0%, transparent 62%),
+    linear-gradient(170deg, #0b1220 0%, #0d1a2b 40%, #0a1626 70%, #070d18 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
 button,
 input {
   @apply transition;
