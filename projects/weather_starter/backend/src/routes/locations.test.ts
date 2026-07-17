@@ -72,4 +72,24 @@ describe('locations API', () => {
     expect(listResponse.body.locations).toHaveLength(1);
     expect(listResponse.body.locations[0].weather.condition).toBe('Cloudy');
   });
+
+  it('deletes an existing location', async () => {
+    const created = await request(app)
+      .post('/api/locations')
+      .send({ latitude: 1.3, longitude: 103.9 })
+      .expect(201);
+
+    await request(app).delete(`/api/locations/${created.body.id}`).expect(204);
+
+    const listResponse = await request(app).get('/api/locations').expect(200);
+    expect(
+      listResponse.body.locations.some(
+        (location: { id: number }) => location.id === created.body.id,
+      ),
+    ).toBe(false);
+  });
+
+  it('returns 404 when deleting a location that does not exist', async () => {
+    await request(app).delete('/api/locations/999999').expect(404);
+  });
 });
