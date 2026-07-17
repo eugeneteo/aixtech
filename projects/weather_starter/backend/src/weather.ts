@@ -186,14 +186,25 @@ export class SingaporeWeatherClient {
       ? this.snapshotFromPayload(forecastPayload, latitude, longitude)
       : this.emptyForecastSnapshot();
 
-    const [temperature, dayForecast] = await Promise.all([
-      this.fetchNearestReading('air-temperature', latitude, longitude).catch(() => null),
-      this.fetchTwentyFourHourForecast(latitude, longitude).catch(() => null),
-    ]);
+    const [temperature, humidity, rainfall, windSpeed, windDirection, uv, dayForecast] =
+      await Promise.all([
+        this.fetchNearestReading('air-temperature', latitude, longitude).catch(() => null),
+        this.fetchNearestReading('relative-humidity', latitude, longitude).catch(() => null),
+        this.fetchNearestReading('rainfall', latitude, longitude).catch(() => null),
+        this.fetchNearestReading('wind-speed', latitude, longitude).catch(() => null),
+        this.fetchNearestReading('wind-direction', latitude, longitude).catch(() => null),
+        this.fetchUvIndex().catch(() => null),
+        this.fetchTwentyFourHourForecast(latitude, longitude).catch(() => null),
+      ]);
 
     return {
       ...base,
       temperature_c: temperature?.value ?? base.temperature_c,
+      humidity_percent: humidity?.value ?? base.humidity_percent,
+      rainfall_mm: rainfall?.value ?? base.rainfall_mm,
+      wind_speed_knots: windSpeed?.value ?? base.wind_speed_knots,
+      wind_direction_degrees: windDirection?.value ?? base.wind_direction_degrees,
+      uv_index: uv?.value ?? base.uv_index,
       forecast_low_c: dayForecast?.low ?? base.forecast_low_c,
       forecast_high_c: dayForecast?.high ?? base.forecast_high_c,
     };

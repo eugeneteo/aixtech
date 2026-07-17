@@ -28,22 +28,62 @@ const twoHourPayload = {
   },
 };
 
-const airTemperaturePayload = {
+const airTemperaturePayload = readingPayload(28.4, 40.1);
+const humidityPayload = readingPayload(78, 55);
+const rainfallPayload = readingPayload(0, 12.2);
+const windSpeedPayload = readingPayload(6.5, 20);
+const windDirectionPayload = readingPayload(135, 300);
+
+// A generic realtime-reading payload with two stations: a far one listed FIRST
+// (must not be chosen) and the nearest one second (the expected winner).
+function readingPayload(nearValue: number, farValue: number) {
+  return {
+    code: 0,
+    data: {
+      stations: [
+        { id: 'S1', name: 'Far', location: { latitude: 1.42, longitude: 103.92 } },
+        { id: 'S2', name: 'Near', location: { latitude: 1.3, longitude: 103.8 } },
+      ],
+      readings: [
+        {
+          timestamp: '2026-07-17T12:29:00+08:00',
+          data: [
+            { stationId: 'S1', value: farValue },
+            { stationId: 'S2', value: nearValue },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+const uvPayload = {
   code: 0,
   data: {
-    stations: [
-      // Far station listed first — must NOT be chosen.
-      { id: 'S1', name: 'Far', location: { latitude: 1.42, longitude: 103.92 } },
-      // Nearest station — expected winner.
-      { id: 'S2', name: 'Near', location: { latitude: 1.3, longitude: 103.8 } },
-    ],
-    readings: [
+    records: [
       {
-        timestamp: '2026-07-17T12:29:00+08:00',
-        data: [
-          { stationId: 'S1', value: 40.1 },
-          { stationId: 'S2', value: 28.4 },
+        date: '2026-07-17',
+        updatedTimestamp: '2026-07-17T12:11:06+08:00',
+        timestamp: '2026-07-17T12:00:00+08:00',
+        index: [
+          { hour: '2026-07-17T12:00:00+08:00', value: 8 },
+          { hour: '2026-07-17T11:00:00+08:00', value: 6 },
         ],
+      },
+    ],
+  },
+};
+
+// Night-time UV: latest reading is 0 (must be preserved, not treated as "missing").
+const uvPayloadZero = {
+  code: 0,
+  data: {
+    records: [
+      {
+        date: '2026-07-17',
+        updatedTimestamp: '2026-07-17T20:11:06+08:00',
+        timestamp: '2026-07-17T20:00:00+08:00',
+        index: [{ hour: '2026-07-17T20:00:00+08:00', value: 0 }],
       },
     ],
   },
@@ -80,26 +120,34 @@ function jsonResponse(payload: unknown): Response {
  * to their default payload; pass `null` to force a network failure for that
  * endpoint (used by the resilience tests).
  */
-function stubFetch(overrides: Partial<Record<'twoHour' | 'airTemp' | 'dayForecast', unknown>> = {}) {
+type Endpoint = 'twoHour' | 'airTemp' | 'humidity' | 'rainfall' | 'windSpeed' | 'windDir' | 'uv' | 'dayForecast';
+
+function stubFetch(overrides: Partial<Record<Endpoint, unknown>> = {}) {
+  const route = (key: Endpoint, fallback: unknown) =>
+    overrides[key] === null ? null : (overrides[key] ?? fallback);
+
   return vi.fn(async (input: string | URL | Request) => {
     const url = typeof input === 'string' ? input : input.toString();
-    if (url.includes('two-hr-forecast')) {
-      if (overrides.twoHour === null) throw new Error('network down');
-      return jsonResponse(overrides.twoHour ?? twoHourPayload);
-    }
-    if (url.includes('air-temperature')) {
-      if (overrides.airTemp === null) throw new Error('network down');
-      return jsonResponse(overrides.airTemp ?? airTemperaturePayload);
-    }
-    if (url.includes('twenty-four-hr-forecast')) {
-      if (overrides.dayForecast === null) throw new Error('network down');
-      return jsonResponse(overrides.dayForecast ?? twentyFourHourPayload);
-    }
+    const match = (key: Endpoint, fallback: unknown): Response => {
+      const payload = route(key, fallback);
+      if (payload === null) throw new Error('network down');
+      return jsonResponse(payload);
+    };
+
+    // Order matters: check the more specific paths before the shared ones.
+    if (url.includes('two-hr-forecast')) return match('twoHour', twoHourPayload);
+    if (url.includes('twenty-four-hr-forecast')) return match('dayForecast', twentyFourHourPayload);
+    if (url.includes('air-temperature')) return match('airTemp', airTemperaturePayload);
+    if (url.includes('relative-humidity')) return match('humidity', humidityPayload);
+    if (url.includes('rainfall')) return match('rainfall', rainfallPayload);
+    if (url.includes('wind-speed')) return match('windSpeed', windSpeedPayload);
+    if (url.includes('wind-direction')) return match('windDir', windDirectionPayload);
+    if (url.endsWith('/uv')) return match('uv', uvPayload);
     throw new Error(`Unexpected fetch to ${url}`);
   });
 }
 
-describe('SingaporeWeatherClient.getCurrentWeather (condition card)', () => {
+describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
   const client = new SingaporeWeatherClient();
 
   beforeEach(() => {
@@ -110,55 +158,105 @@ describe('SingaporeWeatherClient.getCurrentWeather (condition card)', () => {
     vi.restoreAllMocks();
   });
 
-  it('populates every condition-card field from the three endpoints', async () => {
+  it('populates every metric from its endpoint', async () => {
     vi.stubGlobal('fetch', stubFetch());
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
 
-    // From two-hr-forecast (nearest area).
+    // Condition card (two-hr + air-temperature + 24-hr).
     expect(snapshot.area).toBe('Jurong West');
     expect(snapshot.condition).toBe('Partly Cloudy (Day)');
     expect(snapshot.observed_at).toBe('2026-07-17T12:30:00+08:00');
     expect(snapshot.valid_period_text).toBe('12:30 PM to 2:30 PM');
-    // From air-temperature (nearest station) and twenty-four-hr-forecast (H/L).
     expect(snapshot.temperature_c).toBe(28.4);
     expect(snapshot.forecast_low_c).toBe(25);
     expect(snapshot.forecast_high_c).toBe(33);
+    // Dashboard tiles (realtime readings + UV).
+    expect(snapshot.humidity_percent).toBe(78);
+    expect(snapshot.rainfall_mm).toBe(0);
+    expect(snapshot.wind_speed_knots).toBe(6.5);
+    expect(snapshot.wind_direction_degrees).toBe(135);
+    expect(snapshot.uv_index).toBe(8);
   });
 
-  it('selects the nearest air-temperature station, not the first listed', async () => {
+  it('selects the nearest station for each realtime reading, not the first listed', async () => {
     vi.stubGlobal('fetch', stubFetch());
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
 
-    // S1 (40.1) is first but far; S2 (28.4) is nearest.
+    // Nearest-station values, never the far first-listed ones.
     expect(snapshot.temperature_c).toBe(28.4);
-    expect(snapshot.temperature_c).not.toBe(40.1);
+    expect(snapshot.humidity_percent).toBe(78);
+    expect(snapshot.wind_speed_knots).toBe(6.5);
+    expect(snapshot.humidity_percent).not.toBe(55);
+    expect(snapshot.wind_speed_knots).not.toBe(20);
   });
 
-  it('keeps the base snapshot intact when enrichment endpoints fail', async () => {
-    vi.stubGlobal('fetch', stubFetch({ airTemp: null, dayForecast: null }));
+  it('keeps zero-value readings as 0 rather than coercing to null', async () => {
+    vi.stubGlobal('fetch', stubFetch({ uv: uvPayloadZero, rainfall: rainfallPayload }));
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
 
-    // Base two-hr fields still resolve.
+    expect(snapshot.rainfall_mm).toBe(0);
+    expect(snapshot.uv_index).toBe(0);
+  });
+
+  it('degrades per-metric without cascading when some endpoints fail', async () => {
+    vi.stubGlobal(
+      'fetch',
+      stubFetch({ humidity: null, windSpeed: null, windDir: null, uv: null }),
+    );
+
+    const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+
+    // Failed metrics degrade to null...
+    expect(snapshot.humidity_percent).toBeNull();
+    expect(snapshot.wind_speed_knots).toBeNull();
+    expect(snapshot.wind_direction_degrees).toBeNull();
+    expect(snapshot.uv_index).toBeNull();
+    // ...while the rest still resolve — one failure never cascades.
+    expect(snapshot.temperature_c).toBe(28.4);
+    expect(snapshot.rainfall_mm).toBe(0);
+    expect(snapshot.condition).toBe('Partly Cloudy (Day)');
+    expect(snapshot.forecast_high_c).toBe(33);
+  });
+
+  it('keeps the base snapshot intact when all enrichment endpoints fail', async () => {
+    vi.stubGlobal(
+      'fetch',
+      stubFetch({
+        airTemp: null,
+        humidity: null,
+        rainfall: null,
+        windSpeed: null,
+        windDir: null,
+        uv: null,
+        dayForecast: null,
+      }),
+    );
+
+    const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+
     expect(snapshot.area).toBe('Jurong West');
     expect(snapshot.condition).toBe('Partly Cloudy (Day)');
-    // Enrichment fields degrade gracefully to null — the card never breaks.
     expect(snapshot.temperature_c).toBeNull();
+    expect(snapshot.humidity_percent).toBeNull();
+    expect(snapshot.rainfall_mm).toBeNull();
+    expect(snapshot.wind_speed_knots).toBeNull();
+    expect(snapshot.uv_index).toBeNull();
     expect(snapshot.forecast_low_c).toBeNull();
     expect(snapshot.forecast_high_c).toBeNull();
   });
 
-  it('still surfaces temperature and H/L when the two-hr forecast fails', async () => {
+  it('still surfaces metrics when the two-hr forecast fails', async () => {
     vi.stubGlobal('fetch', stubFetch({ twoHour: null }));
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
 
-    // Base becomes the "Unavailable" snapshot, but enrichment still fills in.
     expect(snapshot.condition).toBe('Unavailable');
     expect(snapshot.temperature_c).toBe(28.4);
-    expect(snapshot.forecast_low_c).toBe(25);
+    expect(snapshot.humidity_percent).toBe(78);
+    expect(snapshot.uv_index).toBe(8);
     expect(snapshot.forecast_high_c).toBe(33);
   });
 
