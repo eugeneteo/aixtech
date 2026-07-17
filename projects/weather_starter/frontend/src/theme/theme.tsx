@@ -1,0 +1,81 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
+
+export interface Theme {
+  id: string;
+  label: string;
+  description: string;
+}
+
+// Registered visual themes. The current design is saved as "apple".
+// To add a theme: add an entry here and a matching `[data-theme='<id>']`
+// block in index.css. No component changes are required.
+export const THEMES: Theme[] = [
+  {
+    id: 'apple',
+    label: 'Apple',
+    description: 'Frosted glass over a deep sky gradient.',
+  },
+];
+
+export const DEFAULT_THEME_ID = 'apple';
+const STORAGE_KEY = 'weather-starter-theme';
+
+function isKnownTheme(id: string | null): id is string {
+  return !!id && THEMES.some((theme) => theme.id === id);
+}
+
+function readInitialTheme(): string {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (isKnownTheme(saved)) return saved;
+  } catch {
+    // localStorage may be unavailable; fall back to the default.
+  }
+  return DEFAULT_THEME_ID;
+}
+
+interface ThemeContextValue {
+  theme: string;
+  themes: Theme[];
+  setTheme: (id: string) => void;
+}
+
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<string>(readInitialTheme);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+      // Ignore persistence failures (for example private browsing).
+    }
+  }, [theme]);
+
+  const setTheme = useCallback((id: string) => {
+    if (isKnownTheme(id)) setThemeState(id);
+  }, []);
+
+  const value = useMemo<ThemeContextValue>(
+    () => ({ theme, themes: THEMES, setTheme }),
+    [theme, setTheme],
+  );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
+export function useTheme(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error('useTheme must be used within a ThemeProvider');
+  return context;
+}

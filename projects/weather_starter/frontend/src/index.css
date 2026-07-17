@@ -9,7 +9,12 @@ body,
 }
 
 body {
-  @apply text-white antialiased;
+  @apply antialiased;
+}
+
+/* Theme: apple (the current, default visual design). */
+[data-theme='apple'] body {
+  @apply text-white;
   background:
     radial-gradient(120% 80% at 70% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
     radial-gradient(90% 70% at 10% 100%, rgba(80, 110, 150, 0.55) 0%, transparent 60%),
