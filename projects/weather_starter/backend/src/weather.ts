@@ -186,7 +186,7 @@ export class SingaporeWeatherClient {
       ? this.snapshotFromPayload(forecastPayload, latitude, longitude)
       : this.emptyForecastSnapshot();
 
-    const [temperature, humidity, rainfall, windSpeed, windDirection, uv, airQuality, dayForecast] =
+    const [temperature, humidity, rainfall, windSpeed, windDirection, uv, airQuality, dayForecast, fourDay] =
       await Promise.all([
         this.fetchNearestReading('air-temperature', latitude, longitude).catch(() => null),
         this.fetchNearestReading('relative-humidity', latitude, longitude).catch(() => null),
@@ -196,6 +196,7 @@ export class SingaporeWeatherClient {
         this.fetchUvIndex().catch(() => null),
         this.fetchAirQuality(latitude, longitude).catch(() => null),
         this.fetchTwentyFourHourForecast(latitude, longitude).catch(() => null),
+        this.fetchFourDayForecast().catch(() => null),
       ]);
 
     return {
@@ -209,6 +210,8 @@ export class SingaporeWeatherClient {
       psi_twenty_four_hourly: airQuality?.psi ?? base.psi_twenty_four_hourly,
       pm25_one_hourly: airQuality?.pm25 ?? base.pm25_one_hourly,
       air_quality_region: airQuality?.region ?? base.air_quality_region,
+      forecast_periods: dayForecast?.periods ?? base.forecast_periods,
+      daily_forecast: fourDay?.days ?? base.daily_forecast,
       forecast_low_c: dayForecast?.low ?? base.forecast_low_c,
       forecast_high_c: dayForecast?.high ?? base.forecast_high_c,
     };

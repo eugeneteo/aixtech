@@ -99,12 +99,41 @@ const twentyFourHourPayload = {
         periods: [
           {
             timePeriod: { start: '2026-07-17T12:00:00+08:00', text: 'Midday to 6 pm' },
-            regions: { central: { text: 'Partly Cloudy' } },
+            // "south" is nearest to the query point; "central" is the fallback region.
+            regions: {
+              south: { text: 'Thundery Showers' },
+              central: { text: 'Cloudy' },
+              north: { text: 'Cloudy' },
+              east: { text: 'Cloudy' },
+              west: { text: 'Cloudy' },
+            },
+          },
+          {
+            timePeriod: { start: '2026-07-17T18:00:00+08:00', text: '6 pm to 6 am' },
+            regions: {
+              south: { text: 'Partly Cloudy (Night)' },
+              central: { text: 'Fair (Night)' },
+            },
           },
         ],
       },
     ],
   },
+};
+
+const fourDayPayload = {
+  items: [
+    {
+      update_timestamp: '2026-07-17T09:41:17+08:00',
+      timestamp: '2026-07-17T09:28:00+08:00',
+      forecasts: [
+        { date: '2026-07-18', forecast: 'Afternoon thundery showers', temperature: { low: 25, high: 34 } },
+        { date: '2026-07-19', forecast: 'Afternoon thundery showers', temperature: { low: 25, high: 34 } },
+        { date: '2026-07-20', forecast: 'Late morning showers', temperature: { low: 25, high: 33 } },
+        { date: '2026-07-21', forecast: 'Late morning showers', temperature: { low: 25, high: 33 } },
+      ],
+    },
+  ],
 };
 
 // PSI/PM2.5 share an envelope: regionMetadata + a per-region readings map. "north"
@@ -157,6 +186,7 @@ type Endpoint =
   | 'uv'
   | 'psi'
   | 'pm25'
+  | 'fourDay'
   | 'dayForecast';
 
 function stubFetch(overrides: Partial<Record<Endpoint, unknown>> = {}) {
@@ -182,6 +212,7 @@ function stubFetch(overrides: Partial<Record<Endpoint, unknown>> = {}) {
     if (url.endsWith('/uv')) return match('uv', uvPayload);
     if (url.endsWith('/pm25')) return match('pm25', pm25Payload);
     if (url.endsWith('/psi')) return match('psi', psiPayload);
+    if (url.includes('4-day-weather-forecast')) return match('fourDay', fourDayPayload);
     throw new Error(`Unexpected fetch to ${url}`);
   });
 }
@@ -220,6 +251,46 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
     expect(snapshot.psi_twenty_four_hourly).toBe(48);
     expect(snapshot.pm25_one_hourly).toBe(12);
     expect(snapshot.air_quality_region).toBe('south');
+    // Forecast cards (24-hr periods + 4-day daily outlook).
+    expect(snapshot.forecast_periods).toHaveLength(2);
+    expect(snapshot.forecast_periods[0]).toEqual({
+      label: 'Midday to 6 pm',
+      forecast: 'Thundery Showers',
+    });
+    expect(snapshot.daily_forecast).toHaveLength(4);
+    expect(snapshot.daily_forecast[0]).toEqual({
+      date: '2026-07-18',
+      forecast: 'Afternoon thundery showers',
+      temperature_low_c: 25,
+      temperature_high_c: 34,
+    });
+  });
+
+  it('selects the nearest region for the 24-hour forecast periods', async () => {
+    vi.stubGlobal('fetch', stubFetch());
+
+    const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+
+    // For the query point the nearest region is "south" — not the "central" fallback.
+    expect(snapshot.forecast_periods[0].forecast).toBe('Thundery Showers');
+    expect(snapshot.forecast_periods[0].forecast).not.toBe('Cloudy');
+    expect(snapshot.forecast_periods[1].forecast).toBe('Partly Cloudy (Night)');
+  });
+
+  it('keeps each forecast card independent when the other endpoint fails', async () => {
+    // 4-day down: hourly periods (and H/L) still resolve, daily list is empty.
+    vi.stubGlobal('fetch', stubFetch({ fourDay: null }));
+    let snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+    expect(snapshot.daily_forecast).toEqual([]);
+    expect(snapshot.forecast_periods).toHaveLength(2);
+    expect(snapshot.forecast_high_c).toBe(33);
+
+    // 24-hr down: daily list still resolves, hourly periods (and H/L) are empty/null.
+    vi.stubGlobal('fetch', stubFetch({ dayForecast: null }));
+    snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+    expect(snapshot.forecast_periods).toEqual([]);
+    expect(snapshot.forecast_low_c).toBeNull();
+    expect(snapshot.daily_forecast).toHaveLength(4);
   });
 
   it('selects the nearest region for air quality, not the first listed', async () => {
@@ -310,6 +381,7 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
         psi: null,
         pm25: null,
         dayForecast: null,
+        fourDay: null,
       }),
     );
 
@@ -327,6 +399,8 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
     expect(snapshot.air_quality_region).toBeNull();
     expect(snapshot.forecast_low_c).toBeNull();
     expect(snapshot.forecast_high_c).toBeNull();
+    expect(snapshot.forecast_periods).toEqual([]);
+    expect(snapshot.daily_forecast).toEqual([]);
   });
 
   it('still surfaces metrics when the two-hr forecast fails', async () => {
