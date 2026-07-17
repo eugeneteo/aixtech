@@ -379,6 +379,139 @@ body {
   background: rgba(46, 231, 129, 0.28);
 }
 
+/*
+ * Theme: paper almanac (warm parchment with serif type and a terracotta accent).
+ * A light theme, so like cupertino it retargets the translucent-white utility
+ * classes to opaque parchment cards with sepia ink and ruled hairlines.
+ */
+[data-theme='paper'] body {
+  color: #33291f;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'Palatino', 'Georgia',
+    'Times New Roman', serif;
+  background:
+    radial-gradient(85% 55% at 78% 0%, rgba(176, 74, 47, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, #f6efdd 0%, #efe6cf 60%, #e9dfc5 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Text: sepia ink ramp in place of the white opacity ramp. */
+[data-theme='paper'] .text-white,
+[data-theme='paper'] .text-white\/95,
+[data-theme='paper'] .hover\:text-white:hover {
+  color: #33291f;
+}
+[data-theme='paper'] .text-white\/90,
+[data-theme='paper'] .text-white\/85 {
+  color: #463829;
+}
+[data-theme='paper'] .text-white\/80,
+[data-theme='paper'] .text-white\/75 {
+  color: #574733;
+}
+[data-theme='paper'] .text-white\/70,
+[data-theme='paper'] .text-white\/65 {
+  color: #6a5842;
+}
+[data-theme='paper'] .text-white\/60,
+[data-theme='paper'] .text-white\/55 {
+  color: #857053;
+}
+[data-theme='paper'] .text-white\/50 {
+  color: #9c8767;
+}
+[data-theme='paper'] .text-white\/40,
+[data-theme='paper'] .placeholder\:text-white\/40::placeholder,
+[data-theme='paper'] .placeholder\:text-white\/50::placeholder {
+  color: #b3a081;
+}
+
+/* Surfaces: opaque parchment cards with a soft warm shadow. */
+[data-theme='paper'] .bg-white\/\[0\.08\],
+[data-theme='paper'] .bg-white\/\[0\.1\],
+[data-theme='paper'] .bg-white\/\[0\.07\] {
+  background-color: #fbf6ea;
+  box-shadow:
+    0 1px 2px rgba(51, 41, 31, 0.06),
+    0 10px 26px rgba(51, 41, 31, 0.08);
+}
+[data-theme='paper'] .bg-white\/10,
+[data-theme='paper'] .bg-white\/90,
+[data-theme='paper'] .bg-white {
+  background-color: #fbf6ea;
+}
+[data-theme='paper'] .bg-white\/70 {
+  background-color: rgba(251, 246, 234, 0.9);
+}
+[data-theme='paper'] .bg-white\/\[0\.06\] {
+  background-color: #f2e9d5;
+}
+[data-theme='paper'] .bg-white\/\[0\.04\] {
+  background-color: #ece1c9;
+}
+[data-theme='paper'] .bg-white\/20 {
+  background-color: rgba(176, 74, 47, 0.14);
+}
+[data-theme='paper'] .bg-black\/20 {
+  background-color: rgba(251, 246, 234, 0.7);
+}
+[data-theme='paper'] .bg-slate-950\/80 {
+  background-color: rgba(233, 223, 197, 0.85);
+}
+[data-theme='paper'] .bg-slate-900\/85 {
+  background-color: rgba(251, 246, 234, 0.97);
+  box-shadow:
+    0 1px 2px rgba(51, 41, 31, 0.06),
+    0 12px 28px rgba(51, 41, 31, 0.12);
+}
+
+/* Hover surfaces. */
+[data-theme='paper'] .hover\:bg-white\/\[0\.14\]:hover,
+[data-theme='paper'] .hover\:bg-white\/\[0\.12\]:hover,
+[data-theme='paper'] .hover\:bg-white\/\[0\.1\]:hover {
+  background-color: #f2e9d5;
+}
+[data-theme='paper'] .hover\:bg-white\/\[0\.18\]:hover,
+[data-theme='paper'] .hover\:bg-white:hover {
+  background-color: #ece1c9;
+}
+[data-theme='paper'] .hover\:bg-white\/15:hover {
+  background-color: rgba(51, 41, 31, 0.06);
+}
+
+/* Borders: sepia hairlines, terracotta tint for the selected card. */
+[data-theme='paper'] .border-white\/15 {
+  border-color: rgba(51, 41, 31, 0.14);
+}
+[data-theme='paper'] .border-white\/10 {
+  border-color: rgba(51, 41, 31, 0.1);
+}
+[data-theme='paper'] .border-white\/5 {
+  border-color: rgba(51, 41, 31, 0.06);
+}
+[data-theme='paper'] .border-white\/20 {
+  border-color: rgba(51, 41, 31, 0.16);
+}
+[data-theme='paper'] .border-white\/30 {
+  border-color: rgba(176, 74, 47, 0.5);
+}
+[data-theme='paper'] .border-white {
+  border-color: rgba(51, 41, 31, 0.18);
+}
+[data-theme='paper'] .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(51, 41, 31, 0.1);
+}
+
+/* Terracotta focus rings and a sepia scrollbar for the light surface. */
+[data-theme='paper'] button:focus-visible,
+[data-theme='paper'] input:focus-visible,
+[data-theme='paper'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(176, 74, 47, 0.45);
+}
+[data-theme='paper'] ::-webkit-scrollbar-thumb {
+  background: rgba(51, 41, 31, 0.25);
+}
+
 button,
 input {
   @apply transition;

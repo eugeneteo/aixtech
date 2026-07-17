@@ -43,6 +43,11 @@ export const THEMES: Theme[] = [
     label: 'Terminal Green',
     description: 'Monospace phosphor-green readout on a near-black CRT backdrop.',
   },
+  {
+    id: 'paper',
+    label: 'Paper Almanac',
+    description: 'Warm parchment with serif type, sepia ink, and a terracotta accent.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';
