@@ -107,6 +107,33 @@ const twentyFourHourPayload = {
   },
 };
 
+// PSI/PM2.5 share an envelope: regionMetadata + a per-region readings map. "north"
+// is listed FIRST but far from the query point; "south" is nearest (expected winner).
+function airQualityPayload(readingKey: string, nearValue: number, farValue: number) {
+  return {
+    code: 0,
+    data: {
+      regionMetadata: [
+        { name: 'north', labelLocation: { latitude: 1.42, longitude: 103.82 } },
+        { name: 'south', labelLocation: { latitude: 1.3, longitude: 103.8 } },
+      ],
+      items: [
+        {
+          date: '2026-07-17',
+          updatedTimestamp: '2026-07-17T11:15:43+08:00',
+          timestamp: '2026-07-17T11:00:00+08:00',
+          readings: { [readingKey]: { north: farValue, south: nearValue } },
+        },
+      ],
+    },
+  };
+}
+
+const psiPayload = airQualityPayload('psi_twenty_four_hourly', 48, 60);
+const pm25Payload = airQualityPayload('pm25_one_hourly', 12, 20);
+// Pristine air: nearest-region PSI is 0 (must be preserved, not treated as "missing").
+const psiPayloadZero = airQualityPayload('psi_twenty_four_hourly', 0, 5);
+
 function jsonResponse(payload: unknown): Response {
   return {
     ok: true,
@@ -120,7 +147,17 @@ function jsonResponse(payload: unknown): Response {
  * to their default payload; pass `null` to force a network failure for that
  * endpoint (used by the resilience tests).
  */
-type Endpoint = 'twoHour' | 'airTemp' | 'humidity' | 'rainfall' | 'windSpeed' | 'windDir' | 'uv' | 'dayForecast';
+type Endpoint =
+  | 'twoHour'
+  | 'airTemp'
+  | 'humidity'
+  | 'rainfall'
+  | 'windSpeed'
+  | 'windDir'
+  | 'uv'
+  | 'psi'
+  | 'pm25'
+  | 'dayForecast';
 
 function stubFetch(overrides: Partial<Record<Endpoint, unknown>> = {}) {
   const route = (key: Endpoint, fallback: unknown) =>
@@ -143,6 +180,8 @@ function stubFetch(overrides: Partial<Record<Endpoint, unknown>> = {}) {
     if (url.includes('wind-speed')) return match('windSpeed', windSpeedPayload);
     if (url.includes('wind-direction')) return match('windDir', windDirectionPayload);
     if (url.endsWith('/uv')) return match('uv', uvPayload);
+    if (url.endsWith('/pm25')) return match('pm25', pm25Payload);
+    if (url.endsWith('/psi')) return match('psi', psiPayload);
     throw new Error(`Unexpected fetch to ${url}`);
   });
 }
@@ -177,6 +216,22 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
     expect(snapshot.wind_speed_knots).toBe(6.5);
     expect(snapshot.wind_direction_degrees).toBe(135);
     expect(snapshot.uv_index).toBe(8);
+    // Air quality (psi + pm25, nearest region).
+    expect(snapshot.psi_twenty_four_hourly).toBe(48);
+    expect(snapshot.pm25_one_hourly).toBe(12);
+    expect(snapshot.air_quality_region).toBe('south');
+  });
+
+  it('selects the nearest region for air quality, not the first listed', async () => {
+    vi.stubGlobal('fetch', stubFetch());
+
+    const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+
+    // "south" is nearest; "north" (60/20) is first but far.
+    expect(snapshot.air_quality_region).toBe('south');
+    expect(snapshot.psi_twenty_four_hourly).toBe(48);
+    expect(snapshot.pm25_one_hourly).toBe(12);
+    expect(snapshot.psi_twenty_four_hourly).not.toBe(60);
   });
 
   it('selects the nearest station for each realtime reading, not the first listed', async () => {
@@ -193,18 +248,22 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
   });
 
   it('keeps zero-value readings as 0 rather than coercing to null', async () => {
-    vi.stubGlobal('fetch', stubFetch({ uv: uvPayloadZero, rainfall: rainfallPayload }));
+    vi.stubGlobal(
+      'fetch',
+      stubFetch({ uv: uvPayloadZero, rainfall: rainfallPayload, psi: psiPayloadZero }),
+    );
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
 
     expect(snapshot.rainfall_mm).toBe(0);
     expect(snapshot.uv_index).toBe(0);
+    expect(snapshot.psi_twenty_four_hourly).toBe(0);
   });
 
   it('degrades per-metric without cascading when some endpoints fail', async () => {
     vi.stubGlobal(
       'fetch',
-      stubFetch({ humidity: null, windSpeed: null, windDir: null, uv: null }),
+      stubFetch({ humidity: null, windSpeed: null, windDir: null, uv: null, psi: null, pm25: null }),
     );
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
@@ -214,11 +273,28 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
     expect(snapshot.wind_speed_knots).toBeNull();
     expect(snapshot.wind_direction_degrees).toBeNull();
     expect(snapshot.uv_index).toBeNull();
+    expect(snapshot.psi_twenty_four_hourly).toBeNull();
+    expect(snapshot.pm25_one_hourly).toBeNull();
+    expect(snapshot.air_quality_region).toBeNull();
     // ...while the rest still resolve — one failure never cascades.
     expect(snapshot.temperature_c).toBe(28.4);
     expect(snapshot.rainfall_mm).toBe(0);
     expect(snapshot.condition).toBe('Partly Cloudy (Day)');
     expect(snapshot.forecast_high_c).toBe(33);
+  });
+
+  it('degrades air quality to null when only the pm25 half fails', async () => {
+    vi.stubGlobal('fetch', stubFetch({ pm25: null }));
+
+    const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);
+
+    // fetchAirQuality fetches psi + pm25 together; either failing nulls the trio,
+    // but every other metric is unaffected.
+    expect(snapshot.psi_twenty_four_hourly).toBeNull();
+    expect(snapshot.pm25_one_hourly).toBeNull();
+    expect(snapshot.air_quality_region).toBeNull();
+    expect(snapshot.temperature_c).toBe(28.4);
+    expect(snapshot.uv_index).toBe(8);
   });
 
   it('keeps the base snapshot intact when all enrichment endpoints fail', async () => {
@@ -231,6 +307,8 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
         windSpeed: null,
         windDir: null,
         uv: null,
+        psi: null,
+        pm25: null,
         dayForecast: null,
       }),
     );
@@ -244,6 +322,9 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
     expect(snapshot.rainfall_mm).toBeNull();
     expect(snapshot.wind_speed_knots).toBeNull();
     expect(snapshot.uv_index).toBeNull();
+    expect(snapshot.psi_twenty_four_hourly).toBeNull();
+    expect(snapshot.pm25_one_hourly).toBeNull();
+    expect(snapshot.air_quality_region).toBeNull();
     expect(snapshot.forecast_low_c).toBeNull();
     expect(snapshot.forecast_high_c).toBeNull();
   });
