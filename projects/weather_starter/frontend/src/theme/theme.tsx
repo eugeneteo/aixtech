@@ -48,6 +48,11 @@ export const THEMES: Theme[] = [
     label: 'Paper Almanac',
     description: 'Warm parchment with serif type, sepia ink, and a terracotta accent.',
   },
+  {
+    id: 'brutal',
+    label: 'Neo-Brutalist',
+    description: 'Stark high-contrast panels with thick black borders and hard offset shadows.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';
