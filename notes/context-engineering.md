@@ -30,3 +30,12 @@ essentials when a thread gets long.
 3. **Error accumulation.** Each turn builds on the text before it, including the model's own
    earlier output. A small misreading or wrong assumption is carried forward and compounded,
    so mistakes propagate and grow across turns.
+
+
+## Compaction
+
+Compaction is automatic. When a conversation grows large enough to approach the context
+window limit, the CLI runtime summarises the earlier turns to free up space, so work can
+continue without losing the thread. It is a runtime mechanism rather than something the
+agent chooses to do. The repository and files stay untouched; only the in-memory
+conversation history is condensed, which is why a recap of the session appears afterwards.
