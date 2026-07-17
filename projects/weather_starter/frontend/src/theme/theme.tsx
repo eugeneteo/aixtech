@@ -33,6 +33,11 @@ export const THEMES: Theme[] = [
     label: 'Cupertino Light',
     description: 'Crisp white cards with soft shadows on an off-white daytime backdrop.',
   },
+  {
+    id: 'midnight',
+    label: 'Midnight Mono',
+    description: 'Near-black, high-contrast night mode with flat panels and a cyan accent.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';

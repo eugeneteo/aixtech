@@ -167,6 +167,100 @@ body {
   background: rgba(15, 23, 42, 0.18);
 }
 
+/*
+ * Theme: midnight mono (near-black, high-contrast night mode with a cyan accent).
+ * A dark theme, so the white text ramp is kept. This block swaps the frosted
+ * glass for flat charcoal panels with hairline borders and a single cyan accent.
+ */
+[data-theme='midnight'] body {
+  color: #f4f6f8;
+  letter-spacing: -0.01em;
+  background:
+    radial-gradient(80% 50% at 82% 0%, rgba(34, 211, 238, 0.06) 0%, transparent 55%),
+    linear-gradient(180deg, #0b0d10 0%, #070809 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Surfaces: flat charcoal panels instead of frosted glass. */
+[data-theme='midnight'] .bg-white\/\[0\.08\],
+[data-theme='midnight'] .bg-white\/\[0\.1\],
+[data-theme='midnight'] .bg-white\/\[0\.07\] {
+  background-color: #121519;
+}
+[data-theme='midnight'] .bg-white\/\[0\.06\] {
+  background-color: #0f1217;
+}
+[data-theme='midnight'] .bg-white\/\[0\.04\] {
+  background-color: #0d0f13;
+}
+[data-theme='midnight'] .bg-white\/10 {
+  background-color: #16191e;
+}
+[data-theme='midnight'] .bg-white\/70 {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+[data-theme='midnight'] .bg-white\/90,
+[data-theme='midnight'] .bg-white {
+  background-color: #1c2026;
+}
+[data-theme='midnight'] .bg-white\/20 {
+  background-color: rgba(34, 211, 238, 0.14);
+}
+[data-theme='midnight'] .bg-black\/20 {
+  background-color: #08090b;
+}
+[data-theme='midnight'] .bg-slate-900\/85 {
+  background-color: #0f1216;
+}
+
+/* Hover surfaces. */
+[data-theme='midnight'] .hover\:bg-white\/\[0\.14\]:hover,
+[data-theme='midnight'] .hover\:bg-white\/\[0\.12\]:hover,
+[data-theme='midnight'] .hover\:bg-white\/\[0\.1\]:hover {
+  background-color: #1a1e24;
+}
+[data-theme='midnight'] .hover\:bg-white\/\[0\.18\]:hover,
+[data-theme='midnight'] .hover\:bg-white:hover {
+  background-color: #20252c;
+}
+[data-theme='midnight'] .hover\:bg-white\/15:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Borders: crisp hairlines, cyan accent for the selected card. */
+[data-theme='midnight'] .border-white\/15 {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme='midnight'] .border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+[data-theme='midnight'] .border-white\/5 {
+  border-color: rgba(255, 255, 255, 0.05);
+}
+[data-theme='midnight'] .border-white\/20 {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+[data-theme='midnight'] .border-white\/30 {
+  border-color: rgba(34, 211, 238, 0.6);
+}
+[data-theme='midnight'] .border-white {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+[data-theme='midnight'] .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Cyan focus rings and scrollbar. */
+[data-theme='midnight'] button:focus-visible,
+[data-theme='midnight'] input:focus-visible,
+[data-theme='midnight'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(34, 211, 238, 0.6);
+}
+[data-theme='midnight'] ::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.22);
+}
+
 button,
 input {
   @apply transition;
