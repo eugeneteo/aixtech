@@ -3,6 +3,18 @@
 A working repository for my **AIxTech** AI fluency programme. It holds my projects,
 notes, exercises and reference material as I progress through the programme.
 
+## What I built
+
+Beyond the course starter, this repository adds a containerised development
+environment so the whole stack, plus the GitHub Copilot CLI, runs from a single
+minimal Podman image:
+
+- A minimal **`Containerfile`** (`node:24-slim`) with the **GitHub Copilot CLI** and
+  the `weather_starter` dependencies pre-installed.
+- A small, backward-compatible patch so the app can bind `0.0.0.0` and be reached
+  from the host on a published port, plus a container-friendly `dev:server` script.
+- Setup and run instructions (see "Run in a container (Podman)" below).
+
 ## Layout
 
 | Folder                     | Purpose                                              |
@@ -20,6 +32,10 @@ The AISG AIAP weather starter, a minimal TypeScript full-stack app (Express
 backend, React/Vite frontend, Drizzle ORM over SQLite). Its README lists nine
 progressive feature tasks. See `projects/weather_starter/README.md` for setup and
 usage.
+
+Cloned from the course-provided starter at
+[`AISG-AIAP/weather_starter`](https://github.com/AISG-AIAP/weather_starter) (public
+domain) and vendored into this repository, as instructed by the programme.
 
 ## Run in a container (Podman)
 
@@ -78,4 +94,15 @@ podman run -it --rm -p 3000:3000 \
 
 Credentials are never baked into the image; you authenticate the Copilot CLI at
 runtime, and the `aixtech-copilot` volume keeps that login for next time.
+
+## Licence and credits
+
+My own contributions in this repository (the `Containerfile`, the container tooling
+and patches, and my notes) are licensed under **GPL-3.0** — see [`LICENSE`](LICENSE).
+
+The vendored `projects/weather_starter` code is the course-provided starter from
+[`AISG-AIAP/weather_starter`](https://github.com/AISG-AIAP/weather_starter), which is
+public domain; credit for that code belongs to its original authors. The GPL-3.0
+licence applies only to my own additions, not to the public-domain starter.
+
 
