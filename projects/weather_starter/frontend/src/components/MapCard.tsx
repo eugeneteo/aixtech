@@ -39,27 +39,36 @@ function pinIcon(location: Location, isSelected: boolean): L.DivIcon {
   return L.divIcon({ html, className: '', iconSize: [0, 0], iconAnchor: [0, 0] });
 }
 
-function FitToLocations({ locations }: { locations: Location[] }) {
+function FitToLocations({
+  locations,
+  selectedId,
+}: {
+  locations: Location[];
+  selectedId: number | null;
+}) {
   const map = useMap();
   const key = useMemo(
-    () => locations.map((l) => `${l.id}:${l.latitude},${l.longitude}`).join('|'),
-    [locations],
+    () =>
+      `${selectedId ?? 'none'}#${locations
+        .map((l) => `${l.id}:${l.latitude},${l.longitude}`)
+        .join('|')}`,
+    [locations, selectedId],
   );
 
   useEffect(() => {
     if (locations.length === 0) {
-      map.setView(SINGAPORE_CENTER, DEFAULT_ZOOM);
+      map.setView(SINGAPORE_CENTER, DEFAULT_ZOOM, { animate: true });
       return;
     }
     if (locations.length === 1) {
-      map.setView([locations[0].latitude, locations[0].longitude], 12);
+      map.setView([locations[0].latitude, locations[0].longitude], 12, { animate: true });
       return;
     }
     const bounds = L.latLngBounds(
       locations.map((l) => [l.latitude, l.longitude] as [number, number]),
     );
-    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13 });
-    // key intentionally drives refit when the set of locations changes
+    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13, animate: true });
+    // key intentionally drives refit when the location set OR selection changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, key]);
 
@@ -81,7 +90,7 @@ function LocationsMap({ className }: { className?: string }) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <FitToLocations locations={locations} />
+      <FitToLocations locations={locations} selectedId={selectedId} />
       {locations.map((location) => (
         <Marker
           key={location.id}
