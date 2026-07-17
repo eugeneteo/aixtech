@@ -36,6 +36,35 @@ body {
 }
 
 /*
+ * Theme: sunrise warm (a warm dawn gradient with an amber accent).
+ * A dark theme, so the white glass and text ramp are kept; this block swaps the
+ * backdrop for a plum-to-ember sunrise and tints the accents warm.
+ */
+[data-theme='sunrise'] body {
+  @apply text-white;
+  background:
+    radial-gradient(85% 55% at 80% 0%, rgba(255, 178, 92, 0.30) 0%, transparent 58%),
+    radial-gradient(70% 55% at 15% 10%, rgba(255, 118, 118, 0.22) 0%, transparent 60%),
+    linear-gradient(170deg, #3a1e3d 0%, #5b2a44 35%, #7d3b3f 68%, #8a4a34 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+[data-theme='sunrise'] .bg-white\/20 {
+  background-color: rgba(255, 178, 92, 0.22);
+}
+[data-theme='sunrise'] .border-white\/30 {
+  border-color: rgba(255, 178, 92, 0.7);
+}
+[data-theme='sunrise'] button:focus-visible,
+[data-theme='sunrise'] input:focus-visible,
+[data-theme='sunrise'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(255, 178, 92, 0.7);
+}
+[data-theme='sunrise'] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 178, 92, 0.32);
+}
+
+/*
  * Theme: cupertino light (crisp white cards on an off-white daytime backdrop).
  * The base components use translucent white glass, which only reads on a dark
  * background. This block retargets the utility classes those components use so

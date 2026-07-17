@@ -53,6 +53,11 @@ export const THEMES: Theme[] = [
     label: 'Neo-Brutalist',
     description: 'Stark high-contrast panels with thick black borders and hard offset shadows.',
   },
+  {
+    id: 'sunrise',
+    label: 'Sunrise Warm',
+    description: 'A warm dawn gradient of plum, coral, and amber with an amber accent.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';
