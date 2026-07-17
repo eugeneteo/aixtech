@@ -9,8 +9,9 @@ Beyond the course starter, this repository adds a containerised development
 environment so the whole stack, plus the GitHub Copilot CLI, runs from a single
 minimal Podman image:
 
-- A minimal **`Containerfile`** (`node:24-slim`) with the **GitHub Copilot CLI** and
-  the `weather_starter` dependencies pre-installed.
+- A minimal **`Containerfile`** (`node:24-slim`) with the **GitHub Copilot CLI**
+  pre-installed. The repo itself is bind-mounted at runtime, so the app source and
+  dependencies are never baked into the image.
 - A small, backward-compatible patch so the app can bind `0.0.0.0` and be reached
   from the host on a published port, plus a container-friendly `dev:server` script.
 - Setup and run instructions (see "Run in a container (Podman)" below).
@@ -40,10 +41,11 @@ domain) and vendored into this repository, as instructed by the programme.
 ## Run in a container (Podman)
 
 A minimal Podman image is provided in `Containerfile`. It is based on the latest
-LTS Node (`node:24-slim`), installs the **GitHub Copilot CLI** (`copilot`), and
-pre-installs the `weather_starter` dependencies so the project is ready to run. The
-container starts an interactive shell by default, so you run the Copilot CLI and the
-app yourself.
+LTS Node (`node:24-slim`) and installs the **GitHub Copilot CLI** (`copilot`). The
+image carries no application source or dependencies: the whole repository is
+bind-mounted at runtime with `-v`, and you install the `weather_starter`
+dependencies inside the container as needed. The container starts an interactive
+shell by default, so you run the Copilot CLI and the app yourself.
 
 ### Build
 
@@ -55,18 +57,31 @@ podman build -t aixtech-dev -f Containerfile .
 
 ### Run
 
-The weather_starter dev server is published on port **3000**:
+Run from **inside the repository root (`aixtech/`)** and bind-mount the whole repo
+into the container. Podman requires the mount source to be an absolute path or one
+that begins with `./`, so `./` resolves to the repo only when this is your working
+directory. The weather_starter dev server is published on port **3000**:
 
 ```bash
-podman run -it --rm -p 3000:3000 aixtech-dev
+podman run -it --rm -p 3000:3000 -v ./:/workspace aixtech-dev
 ```
+
+(Equivalently, `-v "$(pwd)":/workspace`. If you run from elsewhere, pass the
+absolute path to the repo instead of `./`.)
 
 Inside the container:
 
 ```bash
-copilot            # start the GitHub Copilot CLI (authenticate on first use)
-npm run dev:server # start the weather_starter app on 0.0.0.0:3000
+copilot                              # start the GitHub Copilot CLI (authenticate on first use)
+cd projects/weather_starter
+npm install --ignore-scripts         # first run, or whenever dependencies change
+npm run dev:server                   # start the weather_starter app on 0.0.0.0:3000
 ```
+
+`--ignore-scripts` skips the Husky "prepare" hook, whose git root differs from the
+mounted repo root. Because `node_modules` is written into the bind-mounted repo, the
+install persists on the host across runs, so you only re-run `npm install` when
+dependencies change.
 
 The image sets `HOST=0.0.0.0` and `PORT=3000`, so once the app is running open it
 from your host browser at:
@@ -79,21 +94,13 @@ Note: use `npm run dev:server` (which runs the Express + Vite server directly),
 not `npm run dev`. The default `npm run dev` routes through Portless and a
 `.localhost` URL, which is meant for running on the host, not inside the container.
 
-### Persist edits and login across runs
+### Persistence and login
 
-To keep your source edits, the installed `node_modules`, and the Copilot CLI login
-between container runs, mount volumes:
-
-```bash
-podman run -it --rm -p 3000:3000 \
-  -v ./projects/weather_starter:/workspace \
-  -v aixtech-node-modules:/workspace/node_modules \
-  -v aixtech-copilot:/root/.copilot \
-  aixtech-dev
-```
-
-Credentials are never baked into the image; you authenticate the Copilot CLI at
-runtime, and the `aixtech-copilot` volume keeps that login for next time.
+Your source edits and installed `node_modules` live in the bind-mounted repo on the
+host, so they persist automatically between container runs. The Copilot CLI login is
+**not** persisted with this single-mount setup: because `--rm` removes the container
+(and its `/root/.copilot`) on exit, you authenticate the Copilot CLI again on each
+run. Credentials are never baked into the image.
 
 ## Licence and credits
 
