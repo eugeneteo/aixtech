@@ -38,6 +38,11 @@ export const THEMES: Theme[] = [
     label: 'Midnight Mono',
     description: 'Near-black, high-contrast night mode with flat panels and a cyan accent.',
   },
+  {
+    id: 'terminal',
+    label: 'Terminal Green',
+    description: 'Monospace phosphor-green readout on a near-black CRT backdrop.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';
