@@ -35,6 +35,138 @@ body {
   background-repeat: no-repeat;
 }
 
+/*
+ * Theme: cupertino light (crisp white cards on an off-white daytime backdrop).
+ * The base components use translucent white glass, which only reads on a dark
+ * background. This block retargets the utility classes those components use so
+ * the light theme is self-contained and Apple/Aurora stay untouched.
+ */
+[data-theme='cupertino'] body {
+  color: #0f172a;
+  background:
+    radial-gradient(90% 60% at 72% 0%, rgba(14, 165, 233, 0.12) 0%, transparent 55%),
+    linear-gradient(180deg, #f6f9fd 0%, #eef3f9 60%, #e7eef6 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Text: invert the white opacity ramp to a slate ramp. */
+[data-theme='cupertino'] .text-white,
+[data-theme='cupertino'] .text-white\/95,
+[data-theme='cupertino'] .hover\:text-white:hover {
+  color: #0f172a;
+}
+[data-theme='cupertino'] .text-white\/90,
+[data-theme='cupertino'] .text-white\/85 {
+  color: #1e293b;
+}
+[data-theme='cupertino'] .text-white\/80,
+[data-theme='cupertino'] .text-white\/75 {
+  color: #334155;
+}
+[data-theme='cupertino'] .text-white\/70,
+[data-theme='cupertino'] .text-white\/65 {
+  color: #475569;
+}
+[data-theme='cupertino'] .text-white\/60,
+[data-theme='cupertino'] .text-white\/55 {
+  color: #64748b;
+}
+[data-theme='cupertino'] .text-white\/50 {
+  color: #94a3b8;
+}
+[data-theme='cupertino'] .text-white\/40,
+[data-theme='cupertino'] .placeholder\:text-white\/40::placeholder,
+[data-theme='cupertino'] .placeholder\:text-white\/50::placeholder {
+  color: #a9b4c4;
+}
+
+/* Surfaces: opaque white cards with soft shadows instead of frosted glass. */
+[data-theme='cupertino'] .bg-white\/\[0\.08\],
+[data-theme='cupertino'] .bg-white\/\[0\.1\],
+[data-theme='cupertino'] .bg-white\/\[0\.07\] {
+  background-color: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 10px 28px rgba(15, 23, 42, 0.08);
+}
+[data-theme='cupertino'] .bg-white\/10,
+[data-theme='cupertino'] .bg-white\/90,
+[data-theme='cupertino'] .bg-white {
+  background-color: #ffffff;
+}
+[data-theme='cupertino'] .bg-white\/70 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+[data-theme='cupertino'] .bg-white\/\[0\.06\] {
+  background-color: #f4f7fb;
+}
+[data-theme='cupertino'] .bg-white\/\[0\.04\] {
+  background-color: #eef3f9;
+}
+[data-theme='cupertino'] .bg-white\/20 {
+  background-color: rgba(14, 165, 233, 0.14);
+}
+[data-theme='cupertino'] .bg-black\/20 {
+  background-color: rgba(255, 255, 255, 0.72);
+}
+[data-theme='cupertino'] .bg-slate-950\/80 {
+  background-color: rgba(226, 232, 240, 0.85);
+}
+[data-theme='cupertino'] .bg-slate-900\/85 {
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 12px 30px rgba(15, 23, 42, 0.12);
+}
+
+/* Hover surfaces. */
+[data-theme='cupertino'] .hover\:bg-white\/\[0\.14\]:hover,
+[data-theme='cupertino'] .hover\:bg-white\/\[0\.12\]:hover,
+[data-theme='cupertino'] .hover\:bg-white\/\[0\.1\]:hover {
+  background-color: #f1f5f9;
+}
+[data-theme='cupertino'] .hover\:bg-white\/\[0\.18\]:hover,
+[data-theme='cupertino'] .hover\:bg-white:hover {
+  background-color: #e9eff6;
+}
+[data-theme='cupertino'] .hover\:bg-white\/15:hover {
+  background-color: rgba(15, 23, 42, 0.06);
+}
+
+/* Borders: faint slate hairlines, sky tint for the selected card. */
+[data-theme='cupertino'] .border-white\/15 {
+  border-color: rgba(15, 23, 42, 0.1);
+}
+[data-theme='cupertino'] .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+[data-theme='cupertino'] .border-white\/5 {
+  border-color: rgba(15, 23, 42, 0.05);
+}
+[data-theme='cupertino'] .border-white\/20 {
+  border-color: rgba(15, 23, 42, 0.12);
+}
+[data-theme='cupertino'] .border-white\/30 {
+  border-color: rgba(2, 132, 199, 0.35);
+}
+[data-theme='cupertino'] .border-white {
+  border-color: rgba(15, 23, 42, 0.15);
+}
+[data-theme='cupertino'] .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+/* Focus rings and scrollbar tuned for a light surface. */
+[data-theme='cupertino'] button:focus-visible,
+[data-theme='cupertino'] input:focus-visible,
+[data-theme='cupertino'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(2, 132, 199, 0.45);
+}
+[data-theme='cupertino'] ::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+}
+
 button,
 input {
   @apply transition;

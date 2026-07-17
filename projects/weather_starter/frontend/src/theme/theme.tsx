@@ -28,6 +28,11 @@ export const THEMES: Theme[] = [
     label: 'Aurora Glass',
     description: 'Refined frosted glass with a vivid aurora glow over deep navy.',
   },
+  {
+    id: 'cupertino',
+    label: 'Cupertino Light',
+    description: 'Crisp white cards with soft shadows on an off-white daytime backdrop.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';
