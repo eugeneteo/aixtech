@@ -94,9 +94,10 @@ export async function createApp(options: AppOptions = {}) {
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const port = Number(process.env.PORT ?? 3000);
+  const host = process.env.HOST ?? '127.0.0.1';
   const app = await createApp();
 
-  app.listen(port, '127.0.0.1', () => {
-    logger.info({ url: `http://127.0.0.1:${port}` }, 'Weather Starter listening');
+  app.listen(port, host, () => {
+    logger.info({ url: `http://${host}:${port}` }, 'Weather Starter listening');
   });
 }
