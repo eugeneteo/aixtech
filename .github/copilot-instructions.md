@@ -28,3 +28,5 @@ Read the relevant file under `docs/` before working in that area:
 - [`docs/conventions.md`](../docs/conventions.md) — ESM `.js` imports, field naming, the
   error shape, coordinate bounds, and the test dependency-injection pattern.
 - [`docs/theming.md`](../docs/theming.md) — how to add a visual theme.
+- [`docs/writing-style.md`](../docs/writing-style.md) — writing conventions for notes,
+  docs, and commit messages.
