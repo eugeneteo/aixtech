@@ -84,6 +84,38 @@ notes that capable single agents already plan, define goals and seek them (G0083
 so its boundary between agent and agentic system is fuzzier than the paper's clean
 single-versus-many split. Treat that as a difference of framing, not a contradiction.
 
+## What makes a system not agentic
+
+It helps to turn the definitions around and ask what a system has to lack to fall outside
+them. Take away any one of these properties and what remains is not agentic, whatever the
+marketing says.
+
+- **It only generates, it does not act.** Producing text, code or images on request is
+  generative AI, not agency. Gartner is explicit that "AI agents and generative AI
+  (typically LLMs and LRMs) are distinct technologies" (G00842058, p3), and IMDA draws the
+  same line: unlike generative AI, an agent "can take actions" on its environment (IMDA,
+  p3). A model that answers and stops has done nothing to the world, so it is not an agent.
+- **It makes no real decision.** The definitions require the system to weigh context and
+  choose how to act. A fixed path that always does the same thing, with no room to decide
+  based on what it finds, is automation rather than agency.
+- **It does not pursue a goal over several steps.** IMDA frames an agent as planning and
+  acting "over multiple steps to achieve a user-defined goal" (IMDA, p6). A single
+  request and response with no follow-through does not clear that bar.
+- **Nothing moves without a human.** If a person has to issue and carry out every step, the
+  software is a tool being operated, not an agent operating on its own.
+
+So the things often called agentic but are not include a plain chatbot that only replies, a
+fixed script or macro that runs the same steps every time, and a dashboard that recommends
+an action but never takes it.
+
+Two caveats keep this test honest. Low autonomy does not by itself make something
+non-agentic: Gartner's Observe and Advise are levels of an agent (G00846081, p1), so an
+agent that only advises is a low-autonomy agent, not a non-agent. And the absence of a
+language model does not automatically mean "not an agent" either. IMDA notes that "software
+agents are not a new concept and other types of agents exist, such as those which use
+deterministic rules, or other neural networks, to make decisions" (IMDA, p6). What settles
+it is the absence of the properties above, not the particular technology inside.
+
 ## At a glance
 
 | Aspect        | AI agent                              | Agentic AI                                  |
