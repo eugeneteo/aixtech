@@ -26,9 +26,10 @@ access through it.
 ## Skills
 
 The more an agent can do, the more instructions it needs, and every instruction spends
-tokens from its context window. Skills fix this by packaging workflows into modules the
-agent loads only when it needs them. An agent with ten skills does not carry all ten at
-once. It pulls in the relevant one, uses it, and moves on.
+tokens from its context window, the fixed budget of text (measured in tokens, chunks of
+roughly a word each) that the model can hold in view at once. Skills fix this by packaging
+workflows into modules the agent loads only when it needs them. An agent with ten skills
+does not carry all ten at once. It pulls in the relevant one, uses it, and moves on.
 
 ## Subagents
 
