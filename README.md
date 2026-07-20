@@ -89,6 +89,16 @@ mounted repo root. Because `node_modules` is written into the bind-mounted repo,
 install persists on the host across runs, so you only re-run `npm install` when
 dependencies change.
 
+To inspect the weather_starter SQLite database, start the MCP Inspector from
+`projects/weather_starter` (so the relative database path resolves):
+
+```bash
+npx @modelcontextprotocol/inspector npx mcp-sqlite backend/weather.db
+```
+
+This publishes the Inspector UI on port **6274** and its proxy on port **6277**;
+open `http://localhost:6274` from your host browser.
+
 The image sets `HOST=0.0.0.0` and `PORT=3000`, so once the app is running open it
 from your host browser at:
 
