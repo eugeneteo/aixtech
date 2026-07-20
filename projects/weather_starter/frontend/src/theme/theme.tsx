@@ -63,6 +63,11 @@ export const THEMES: Theme[] = [
     label: 'Ocean Deep',
     description: 'Deep sea gradient of teal and abyssal blue with an aqua accent.',
   },
+  {
+    id: 'newsprint',
+    label: 'Forecast Newsprint',
+    description: 'Editorial newspaper look with serif type, ruled dividers, and a restrained ink-red accent.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';

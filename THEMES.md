@@ -42,7 +42,7 @@ paint matches the saved design with no flash.
 
 ## Implemented themes
 
-These nine themes are live in the selector.
+These themes are live in the selector.
 
 | # | Theme | Kind | Description |
 | --- | --- | --- | --- |
@@ -55,6 +55,7 @@ These nine themes are live in the selector.
 | 6 | Neo-Brutalist | Light | Stark high-contrast panels with thick black borders and hard offset shadows. |
 | 7 | Sunrise Warm | Dark | A warm dawn gradient of plum, coral, and amber with an amber accent. |
 | 8 | Ocean Deep | Dark | Deep sea gradient of teal and abyssal blue with an aqua accent. |
+| 9 | Forecast Newsprint | Light | Editorial newspaper look: off-white stock, serif type, ruled dividers, and a restrained ink-red accent. |
 
 ### Design considerations, theme by theme
 
@@ -81,6 +82,11 @@ These nine themes are live in the selector.
   amber glows, keeping the white glass legible, with an amber accent.
 - **Ocean Deep.** A dark theme with a teal-to-abyssal-blue gradient and soft aqua and cyan
   glows, keeping the white glass legible, with an aqua accent.
+- **Forecast Newsprint.** A light editorial theme: a flat, cool off-white newsprint stock,
+  serif body type, and a near-black cool-ink text ramp. Crisp flat near-white column cards
+  with faint shadows and thin ruled ink hairlines evoke printed columns, with a single
+  restrained ink-red accent on the selected card, focus rings, and scrollbar. Kept cool
+  and editorial to read distinctly from the warm Paper Almanac.
 
 ## Proposed themes
 
@@ -91,7 +97,6 @@ full utility-class override.
 
 | # | Theme | Kind | Intended direction |
 | --- | --- | --- | --- |
-| 9 | Forecast Newsprint | Light | Editorial newspaper look: off-white stock, serif headlines, ruled dividers, restrained ink accents, dense layout. |
 | 10 | Pastel Soft | Light | Gentle pastel gradient, rounded cards, soft shadows, generous spacing, low-contrast calm palette. |
 | 11 | Synthwave Grid | Dark | Retro 1980s neon: deep purple sky, magenta and cyan glows, grid motif, bright neon accent. |
 | 12 | Nordic Calm | Light | Muted Scandinavian palette, plenty of whitespace, thin borders, understated blue-grey accent. |
@@ -103,4 +108,4 @@ full utility-class override.
 
 - Apple saved as the baseline theme, and the theme selector added.
 - Implemented, in list order: Aurora Glass, Cupertino Light, Midnight Mono, Terminal
-  Green, Paper Almanac, Neo-Brutalist, Sunrise Warm, Ocean Deep.
+  Green, Paper Almanac, Neo-Brutalist, Sunrise Warm, Ocean Deep, Forecast Newsprint.

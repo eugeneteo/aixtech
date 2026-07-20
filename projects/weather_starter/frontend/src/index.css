@@ -694,6 +694,140 @@ body {
   background: #111111;
 }
 
+/*
+ * Theme: forecast newsprint (an editorial newspaper look with ruled dividers).
+ * A light theme, so like paper and cupertino it retargets the translucent-white
+ * utility classes. Cool off-white newsprint stock and serif type, a near-black
+ * cool-ink text ramp, crisp flat column cards with ruled ink hairlines, and a
+ * single restrained ink-red accent for selection.
+ */
+[data-theme='newsprint'] body {
+  color: #16181c;
+  font-family: 'Georgia', 'Times New Roman', 'Times', 'PT Serif', serif;
+  background:
+    radial-gradient(88% 55% at 78% 0%, rgba(176, 32, 32, 0.05) 0%, transparent 55%),
+    linear-gradient(180deg, #f4f2ec 0%, #eeece4 60%, #e8e5db 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Text: cool newsprint-ink ramp in place of the white opacity ramp. */
+[data-theme='newsprint'] .text-white,
+[data-theme='newsprint'] .text-white\/95,
+[data-theme='newsprint'] .hover\:text-white:hover {
+  color: #16181c;
+}
+[data-theme='newsprint'] .text-white\/90,
+[data-theme='newsprint'] .text-white\/85 {
+  color: #262a30;
+}
+[data-theme='newsprint'] .text-white\/80,
+[data-theme='newsprint'] .text-white\/75 {
+  color: #363b43;
+}
+[data-theme='newsprint'] .text-white\/70,
+[data-theme='newsprint'] .text-white\/65 {
+  color: #4a505a;
+}
+[data-theme='newsprint'] .text-white\/60,
+[data-theme='newsprint'] .text-white\/55 {
+  color: #626973;
+}
+[data-theme='newsprint'] .text-white\/50 {
+  color: #7c828c;
+}
+[data-theme='newsprint'] .text-white\/40,
+[data-theme='newsprint'] .placeholder\:text-white\/40::placeholder,
+[data-theme='newsprint'] .placeholder\:text-white\/50::placeholder {
+  color: #9aa0a8;
+}
+
+/* Surfaces: crisp flat near-white column cards with a faint shadow. */
+[data-theme='newsprint'] .bg-white\/\[0\.08\],
+[data-theme='newsprint'] .bg-white\/\[0\.1\],
+[data-theme='newsprint'] .bg-white\/\[0\.07\] {
+  background-color: #fbfaf6;
+  box-shadow:
+    0 1px 1px rgba(22, 24, 28, 0.05),
+    0 6px 18px rgba(22, 24, 28, 0.06);
+}
+[data-theme='newsprint'] .bg-white\/10,
+[data-theme='newsprint'] .bg-white\/90,
+[data-theme='newsprint'] .bg-white {
+  background-color: #fbfaf6;
+}
+[data-theme='newsprint'] .bg-white\/70 {
+  background-color: rgba(251, 250, 246, 0.9);
+}
+[data-theme='newsprint'] .bg-white\/\[0\.06\] {
+  background-color: #f1efe8;
+}
+[data-theme='newsprint'] .bg-white\/\[0\.04\] {
+  background-color: #eae7de;
+}
+[data-theme='newsprint'] .bg-white\/20 {
+  background-color: rgba(176, 32, 32, 0.12);
+}
+[data-theme='newsprint'] .bg-black\/20 {
+  background-color: rgba(251, 250, 246, 0.72);
+}
+[data-theme='newsprint'] .bg-slate-950\/80 {
+  background-color: rgba(232, 229, 219, 0.85);
+}
+[data-theme='newsprint'] .bg-slate-900\/85 {
+  background-color: rgba(251, 250, 246, 0.97);
+  box-shadow:
+    0 1px 1px rgba(22, 24, 28, 0.05),
+    0 10px 24px rgba(22, 24, 28, 0.1);
+}
+
+/* Hover surfaces. */
+[data-theme='newsprint'] .hover\:bg-white\/\[0\.14\]:hover,
+[data-theme='newsprint'] .hover\:bg-white\/\[0\.12\]:hover,
+[data-theme='newsprint'] .hover\:bg-white\/\[0\.1\]:hover {
+  background-color: #f1efe8;
+}
+[data-theme='newsprint'] .hover\:bg-white\/\[0\.18\]:hover,
+[data-theme='newsprint'] .hover\:bg-white:hover {
+  background-color: #eae7de;
+}
+[data-theme='newsprint'] .hover\:bg-white\/15:hover {
+  background-color: rgba(22, 24, 28, 0.06);
+}
+
+/* Borders: thin ruled ink hairlines, ink-red tint for the selected card. */
+[data-theme='newsprint'] .border-white\/15 {
+  border-color: rgba(22, 24, 28, 0.16);
+}
+[data-theme='newsprint'] .border-white\/10 {
+  border-color: rgba(22, 24, 28, 0.12);
+}
+[data-theme='newsprint'] .border-white\/5 {
+  border-color: rgba(22, 24, 28, 0.07);
+}
+[data-theme='newsprint'] .border-white\/20 {
+  border-color: rgba(22, 24, 28, 0.18);
+}
+[data-theme='newsprint'] .border-white\/30 {
+  border-color: rgba(176, 32, 32, 0.5);
+}
+[data-theme='newsprint'] .border-white {
+  border-color: rgba(22, 24, 28, 0.2);
+}
+[data-theme='newsprint'] .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(22, 24, 28, 0.12);
+}
+
+/* Ink-red focus rings and an ink scrollbar for the light surface. */
+[data-theme='newsprint'] button:focus-visible,
+[data-theme='newsprint'] input:focus-visible,
+[data-theme='newsprint'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(176, 32, 32, 0.45);
+}
+[data-theme='newsprint'] ::-webkit-scrollbar-thumb {
+  background: rgba(22, 24, 28, 0.28);
+}
+
 button,
 input {
   @apply transition;
