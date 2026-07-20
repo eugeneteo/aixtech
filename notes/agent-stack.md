@@ -36,3 +36,17 @@ Even a well-equipped agent eventually hits a ceiling. Long tasks fill the contex
 and earlier information starts to degrade. Subagents get past this by handing focused
 tasks to separate agents that start clean, do the work, and report back. The main agent
 keeps a sharp, uncluttered context.
+
+## Where the harness fits
+
+The layers above are the parts. The harness is the software that wires them together and
+runs them: the loop that lets the model take a turn, call a tool, read the result, and
+decide what to do next, plus the plumbing for context and memory, and the orchestration
+that starts subagents and gathers their answers. The model on its own only reasons; the
+harness is what turns that reasoning into a working agent.
+
+This also explains why the line between an AI agent and agentic AI can feel blurry. It is
+the same harness operating at two settings. A model with a harness running a single act
+loop is one AI agent. The same harness coordinating several of those loops as subagents is
+agentic AI. For how those two levels differ in scope and autonomy, see
+[ai-agents-vs-agentic-ai.md](ai-agents-vs-agentic-ai.md).

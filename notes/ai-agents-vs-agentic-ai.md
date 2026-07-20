@@ -3,11 +3,12 @@
 These two terms are often used as if they mean the same thing, but they describe
 different levels of the same idea. The short version: an AI agent is a single doer that
 handles one scoped task, while agentic AI is a coordinated approach that puts one or more
-of those agents to work on something larger. This note combines two lenses: the academic
-taxonomy in Sapkota, Roumeliotis and Karkee (2025), and the enterprise framing from
-Gartner research. Gartner claims below are cited to the specific document (by Gartner
-document ID) and page; the full text needs a Gartner subscription, and nothing here is
-inferred beyond what those pages state.
+of those agents to work on something larger. This note draws on three sources that turn
+out to agree: the academic taxonomy in Sapkota, Roumeliotis and Karkee (2025), Gartner's
+enterprise research, and Singapore's IMDA governance framework. Quotations are cited to
+their source; the Gartner claims carry a document ID and page and need a Gartner
+subscription to read in full, and nothing here is inferred beyond what those sources
+state.
 
 ## The core distinction
 
@@ -35,6 +36,15 @@ It is also worth keeping agentic AI distinct from generative AI. "AI agents and 
 AI (typically LLMs and LRMs) are distinct technologies" (G00842058, p3). An agent may
 use a generative model, but the two are not the same thing.
 
+Singapore's IMDA governance framework lands in the same place. It notes that agents
+"usually possess some degree of independent planning, decision-making, and action-taking
+... over multiple steps to achieve a user-defined goal", and defines the wider system as
+one built from those agents: "Agentic AI systems are software systems consisting of one or
+multiple AI agents that may operate individually or collaboratively" (IMDA, p6). Its
+executive summary makes the same contrast with generative AI as Gartner does: "Compared to
+generative AI, AI agents can take actions, adapt to new information, and interact with
+other agents and systems to complete tasks on behalf of humans" (IMDA, p3).
+
 ## AI agent
 
 An AI agent is usually a single, modular system built on a large language model, with
@@ -61,16 +71,17 @@ assembles agents into a goal-driven system and typically operates at higher auto
 "humans out of the loop" for more of the work, which raises the governance stakes
 (G00833514, p3).
 
-## How the two framings line up
+## How the framings line up
 
-The academic taxonomy and the Gartner framing agree on the essentials: an AI agent is the
-acting unit, and agentic AI is the broader approach that puts one or more of those agents
-to work at higher autonomy. They differ only in emphasis. The academic paper draws the line
-by structure, a single agent versus several orchestrated agents, whereas Gartner draws it by
-autonomy and scope. Gartner also notes that capable single agents already plan, define goals
-and seek them (G00833514, p2), so its boundary between agent and agentic system is fuzzier
-than the paper's clean single-versus-many split. Treat that as a difference of framing, not
-a contradiction.
+The academic taxonomy, the Gartner framing and IMDA's definitions agree on the essentials:
+an AI agent is the acting unit, and agentic AI is the broader approach that puts one or
+more of those agents to work at higher autonomy. They differ only in emphasis. The academic
+paper draws the line by structure, a single agent versus several orchestrated agents;
+Gartner draws it by autonomy and scope; and IMDA, writing for governance, stresses that an
+agentic AI system may run one agent or many, individually or in collaboration. Gartner also
+notes that capable single agents already plan, define goals and seek them (G00833514, p2),
+so its boundary between agent and agentic system is fuzzier than the paper's clean
+single-versus-many split. Treat that as a difference of framing, not a contradiction.
 
 ## At a glance
 
@@ -112,6 +123,9 @@ better.
 - **Match governance to autonomy level.** Classify each agent by its autonomy level and
   govern accordingly, rather than applying one control regime to all (G00846081, p1
   and p5).
+- **Keep humans accountable, but expect oversight to thin out.** IMDA warns that
+  "continuous human oversight over all agent workflows becomes impractical at scale"
+  (IMDA, p3), which is exactly why control has to be proportional rather than uniform.
 
 ## A note on usage
 
@@ -124,6 +138,9 @@ not a hard boundary.
 
 Academic taxonomy: "AI Agents vs. Agentic AI: A Conceptual Taxonomy, Applications and
 Challenges", arXiv:2505.10468, <https://arxiv.org/abs/2505.10468>
+
+IMDA (Singapore): "Model AI Governance Framework for Agentic AI",
+<https://www.imda.gov.sg/-/media/imda/files/about/emerging-tech-and-research/artificial-intelligence/mgf-for-agentic-ai.pdf>
 
 Gartner research. Page references were verified against each document's own text; the full
 documents require a Gartner subscription to read.
