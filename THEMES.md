@@ -56,6 +56,7 @@ These themes are live in the selector.
 | 7 | Sunrise Warm | Dark | A warm dawn gradient of plum, coral, and amber with an amber accent. |
 | 8 | Ocean Deep | Dark | Deep sea gradient of teal and abyssal blue with an aqua accent. |
 | 9 | Forecast Newsprint | Light | Editorial newspaper look: off-white stock, serif type, ruled dividers, and a restrained ink-red accent. |
+| 10 | Pastel Soft | Light | Gentle pastel gradient with rounded cards, soft shadows, and a calm low-contrast palette. |
 
 ### Design considerations, theme by theme
 
@@ -87,6 +88,10 @@ These themes are live in the selector.
   with faint shadows and thin ruled ink hairlines evoke printed columns, with a single
   restrained ink-red accent on the selected card, focus rings, and scrollbar. Kept cool
   and editorial to read distinctly from the warm Paper Almanac.
+- **Pastel Soft.** A gentle, low-contrast light theme: a near-white backdrop washed with
+  soft lavender, mint, and peach pastels, a muted indigo-slate text ramp to keep contrast
+  calm, and clean white cards with extra corner rounding and soft shadows for a friendly
+  feel. A soft lilac accent marks the selected card, focus rings, and scrollbar.
 
 ## Proposed themes
 
@@ -97,7 +102,6 @@ full utility-class override.
 
 | # | Theme | Kind | Intended direction |
 | --- | --- | --- | --- |
-| 10 | Pastel Soft | Light | Gentle pastel gradient, rounded cards, soft shadows, generous spacing, low-contrast calm palette. |
 | 11 | Synthwave Grid | Dark | Retro 1980s neon: deep purple sky, magenta and cyan glows, grid motif, bright neon accent. |
 | 12 | Nordic Calm | Light | Muted Scandinavian palette, plenty of whitespace, thin borders, understated blue-grey accent. |
 | 13 | Sunny Meadow | Light | Bright daytime greens and sky blues, cheerful warm accent, friendly rounded cards. |
@@ -108,4 +112,5 @@ full utility-class override.
 
 - Apple saved as the baseline theme, and the theme selector added.
 - Implemented, in list order: Aurora Glass, Cupertino Light, Midnight Mono, Terminal
-  Green, Paper Almanac, Neo-Brutalist, Sunrise Warm, Ocean Deep, Forecast Newsprint.
+  Green, Paper Almanac, Neo-Brutalist, Sunrise Warm, Ocean Deep, Forecast Newsprint,
+  Pastel Soft.

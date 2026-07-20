@@ -68,6 +68,11 @@ export const THEMES: Theme[] = [
     label: 'Forecast Newsprint',
     description: 'Editorial newspaper look with serif type, ruled dividers, and a restrained ink-red accent.',
   },
+  {
+    id: 'pastel',
+    label: 'Pastel Soft',
+    description: 'Gentle pastel gradient with rounded cards, soft shadows, and a calm low-contrast palette.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';
