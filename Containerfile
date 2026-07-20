@@ -11,6 +11,10 @@ RUN apt-get update \
 # GitHub Copilot CLI, installed globally so `copilot` is on PATH.
 RUN npm install -g @github/copilot
 
+# Default Copilot CLI settings: omit the Co-authored-by: Copilot commit trailer.
+RUN mkdir -p /root/.copilot \
+    && printf '{\n  "includeCoAuthoredBy": false\n}\n' > /root/.copilot/settings.json
+
 # The whole aixtech repo is bind-mounted here at runtime (-v ./:/workspace), so
 # weather_starter lives at /workspace/projects/weather_starter. No source or
 # node_modules are baked in; install dependencies at runtime as needed.
