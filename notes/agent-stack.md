@@ -30,7 +30,9 @@ tokens from its context window, the fixed budget of text (measured in tokens, ch
 roughly a word each) that the model can hold in view at once. Think of it as the agent's
 working memory for a single request. It does not persist on its own: the model is stateless
 between requests, so anything from earlier in the conversation stays available only if the
-harness feeds that history back into the window on the next prompt. Skills fix this by
+harness feeds that history back into the window on the next prompt. Because that history is
+resent every turn, its tokens are paid for again on each request, so a longer conversation
+costs more with every prompt. Skills fix this by
 packaging
 workflows into modules the agent loads only when it needs them. An agent with ten skills
 does not carry all ten at once. It pulls in the relevant one, uses it, and moves on.
