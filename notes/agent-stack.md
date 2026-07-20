@@ -10,6 +10,11 @@ The model is the reasoning core. It reads code, thinks through the problem, and 
 a solution. On its own, though, it has no way to touch your codebase. It can only reason
 about what you put in front of it.
 
+Picking the right model is easier with independent benchmarks. A good starting point is
+Artificial Analysis (<https://artificialanalysis.ai/>), which compares models across
+measures such as intelligence, speed and price, so you can weigh the trade-offs rather than
+guess.
+
 ## Coding tools
 
 Coding tools give the model hands. They let it open files, run commands, and write code in
