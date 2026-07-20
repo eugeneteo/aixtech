@@ -52,7 +52,13 @@ mcporter call chrome-devtools.lighthouse_audit
 
 ## Notes
 
+- Run `mcporter` commands from the repository root (`/workspace`), where
+  `config/mcporter.json` defines the `chrome-devtools` server. From another directory
+  mcporter cannot find the server and times out starting its own daemon.
 - To see every available tool and its parameters, run
   `mcporter list chrome-devtools`.
 - The `chrome-devtools` server is configured in `config/mcporter.json`; add it with
   `mcporter config add chrome-devtools --command "npx -y chrome-devtools-mcp@latest"`.
+- The container image installs Chromium and a headless, no-sandbox shim at
+  `/opt/google/chrome/chrome` (see the `Containerfile`), so the default server config
+  works without extra flags.

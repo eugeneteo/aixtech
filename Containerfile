@@ -16,6 +16,22 @@ RUN npm install -g @github/copilot
 # their tools from the shell or scripts. Installed globally so `mcporter` is on PATH.
 RUN npm install -g mcporter
 
+# Chromium for the chrome-devtools skill (browser debugging via MCPorter). This image is
+# arm64 and Google Chrome ships no arm64 build, so we use Debian's chromium. fonts-liberation
+# gives rendered pages and screenshots real glyphs.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends chromium fonts-liberation \
+    && rm -rf /var/lib/apt/lists/*
+
+# chrome-devtools-mcp resolves the stable channel to /opt/google/chrome/chrome. Placing a
+# shim there means the skill's default `npx chrome-devtools-mcp` config works unchanged.
+# The flags suit a rootful, display-less container: --no-sandbox (Chrome cannot create its
+# own sandbox here and cannot run as root otherwise), --headless=new (no display), and
+# --disable-dev-shm-usage (the small container /dev/shm would otherwise crash the browser).
+RUN mkdir -p /opt/google/chrome \
+    && printf '#!/bin/sh\nexec /usr/bin/chromium --no-sandbox --headless=new --disable-gpu --disable-dev-shm-usage "$@"\n' > /opt/google/chrome/chrome \
+    && chmod +x /opt/google/chrome/chrome
+
 # Default Copilot CLI settings: omit the Co-authored-by: Copilot commit trailer.
 RUN mkdir -p /root/.copilot \
     && printf '{\n  "includeCoAuthoredBy": false\n}\n' > /root/.copilot/settings.json
