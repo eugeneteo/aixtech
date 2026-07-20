@@ -12,8 +12,8 @@ state.
 
 ## The core distinction
 
-Start with how the sources define each term. An AI agent is the acting unit; agentic AI is
-the wider approach that stands one or more of those units up as a system.
+Start with how the sources define each term. An AI agent is a building block; agentic AI is
+what you get when one or more of those blocks are assembled into a working system.
 
 - **AI agent.** "Autonomous or semi-autonomous software entities that use AI techniques to
   perceive, make decisions, take actions and achieve goals in their digital or physical
