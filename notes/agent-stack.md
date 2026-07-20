@@ -10,10 +10,15 @@ The model is the reasoning core. It reads code, thinks through the problem, and 
 a solution. On its own, though, it has no way to touch your codebase. It can only reason
 about what you put in front of it.
 
-Picking the right model is easier with independent benchmarks. A good starting point is
-Artificial Analysis (<https://artificialanalysis.ai/>), which compares models across
-measures such as intelligence, speed and price, so you can weigh the trade-offs rather than
-guess.
+Three things matter most when choosing a model: intelligence, how well it reasons through
+the problem; speed, how quickly it responds; and the context window, how much it can hold
+in view at once (the same working memory described under Skills below). These pull against
+each other, so the strongest model is not always the right one: a sharper model that is
+slow, or whose window is too small for the job, may be the wrong pick.
+
+Independent benchmarks make the trade-off concrete. A good starting point is Artificial
+Analysis (<https://artificialanalysis.ai/>), which compares models on intelligence, speed
+and price; each model's context-window size is listed in its own specifications.
 
 ## Coding tools
 
