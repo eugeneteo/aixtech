@@ -5,8 +5,8 @@ different levels of the same idea. The short version: an AI agent is a single do
 handles one scoped task, while agentic AI is a coordinated approach that puts one or more
 of those agents to work on something larger. This note combines two lenses: the academic
 taxonomy in Sapkota, Roumeliotis and Karkee (2025), and the enterprise framing from
-Gartner research. Gartner claims below are cited to the specific document and page and
-linked to gartner.com; the full text needs a Gartner subscription, and nothing here is
+Gartner research. Gartner claims below are cited to the specific document (by Gartner
+document ID) and page; the full text needs a Gartner subscription, and nothing here is
 inferred beyond what those pages state.
 
 ## The core distinction
@@ -16,23 +16,23 @@ approach that puts one or more of those blocks to work.
 
 - **AI agent.** "Autonomous or semi-autonomous software entities that use AI techniques to
   perceive, make decisions, take actions and achieve goals in their digital or physical
-  environments" ([G00833514][g1], Table 1, p1 and p6; repeated verbatim in [G00842058][g4],
+  environments" (G00833514, Table 1, p1 and p6; repeated verbatim in G00842058,
   p3). A shorter framing for service leaders: "software programs that have the ability to
   evaluate relevant context, determine how to act, and take action (either autonomously or
-  semiautonomously) toward a predetermined outcome" ([G00854682][g2], p1).
+  semiautonomously) toward a predetermined outcome" (G00854682, p1).
 - **Agentic AI.** "An approach to building AI solutions that are based on the use of one or
   multiple software entities that classify completely or at least partially as an AI agent
-  (as defined by Gartner), possibly combined with other non-AI elements" ([G00833514][g1],
+  (as defined by Gartner), possibly combined with other non-AI elements" (G00833514,
   Table 1, p1 and p6). Put plainly, agentic AI "is a broader approach to building AI
-  solutions, one that involves using at least one AI agent" ([G00854682][g2], p1 and p3).
+  solutions, one that involves using at least one AI agent" (G00854682, p1 and p3).
 
 Gartner states the relationship directly: "'AI agent' refers to a software entity that
-takes action; 'agentic AI' refers to a broader approach" ([G00854682][g2], p3). In common
+takes action; 'agentic AI' refers to a broader approach" (G00854682, p3). In common
 usage the terms diverge in tone as well: "'AI agents' is a term used broadly by many, while
-agentic AI is associated with an autonomous and goal-driven system" ([G00833514][g1], p2).
+agentic AI is associated with an autonomous and goal-driven system" (G00833514, p2).
 
 It is also worth keeping agentic AI distinct from generative AI. "AI agents and generative
-AI (typically LLMs and LRMs) are distinct technologies" ([G00842058][g4], p3). An agent may
+AI (typically LLMs and LRMs) are distinct technologies" (G00842058, p3). An agent may
 use a generative model, but the two are not the same thing.
 
 ## AI agent
@@ -56,10 +56,21 @@ and the complexity of orchestration.
 
 The confusion between the two is understandable, because capable agents and full agentic
 systems share behaviours. Advanced AI agents already exhibit planning, goal-defining and
-goal-seeking ([G00833514][g1], p2). The separation is one of scope and autonomy: agentic AI
+goal-seeking (G00833514, p2). The separation is one of scope and autonomy: agentic AI
 assembles agents into a goal-driven system and typically operates at higher autonomy, with
 "humans out of the loop" for more of the work, which raises the governance stakes
-([G00833514][g1], p3).
+(G00833514, p3).
+
+## How the two framings line up
+
+The academic taxonomy and the Gartner framing agree on the essentials: an AI agent is the
+acting unit, and agentic AI is the broader approach that puts one or more of those agents
+to work at higher autonomy. They differ only in emphasis. The academic paper draws the line
+by structure, a single agent versus several orchestrated agents, whereas Gartner draws it by
+autonomy and scope. Gartner also notes that capable single agents already plan, define goals
+and seek them (G00833514, p2), so its boundary between agent and agentic system is fuzzier
+than the paper's clean single-versus-many split. Treat that as a difference of framing, not
+a contradiction.
 
 ## At a glance
 
@@ -74,7 +85,7 @@ assembles agents into a goal-driven system and typically operates at higher auto
 
 ## Autonomy is a spectrum, not a switch
 
-Gartner frames autonomy as four governed levels ([G00846081][g3], p1, p7 and p8):
+Gartner frames autonomy as four governed levels (G00846081, p1, p7 and p8):
 
 1. **Level 1, Observe.** Read-only access on a least-function and least-privilege scope.
 2. **Level 2, Advise.** Generates recommendations or drafts; humans execute all actions.
@@ -84,22 +95,22 @@ Gartner frames autonomy as four governed levels ([G00846081][g3], p1, p7 and p8)
    exceptions and samples rather than every action.
 
 Governance must be proportional: lightweight for Level 1, rigorous for autonomous agents
-([G00846081][g3], p5). The enterprise planning assumption is blunt: "By 2027, 40% of
+(G00846081, p5). The enterprise planning assumption is blunt: "By 2027, 40% of
 enterprises will demote or decommission autonomous AI agents due to governance gaps"
-([G00846081][g3], p2). The same note cautions that many deployments "deliver optimal ROI at
-lower levels" of autonomy ([G00846081][g3], p2), so higher autonomy is not automatically
+(G00846081, p2). The same note cautions that many deployments "deliver optimal ROI at
+lower levels" of autonomy (G00846081, p2), so higher autonomy is not automatically
 better.
 
 ## What this means for the enterprise
 
 - **Plan for semi-autonomy first.** "Semiautonomous deployments ... are what enterprises
-  must plan for" ([G00842058][g4], p2). Full autonomy is the exception to design towards,
+  must plan for" (G00842058, p2). Full autonomy is the exception to design towards,
   not the default.
 - **Do not assume automatic savings.** Guard against the "misconception that AI agents will
-  automatically reduce costs" ([G00854682][g2], p6). Cost outcomes depend on design,
+  automatically reduce costs" (G00854682, p6). Cost outcomes depend on design,
   governance and the level of autonomy chosen.
 - **Match governance to autonomy level.** Classify each agent by its autonomy level and
-  govern accordingly, rather than applying one control regime to all ([G00846081][g3], p1
+  govern accordingly, rather than applying one control regime to all (G00846081, p1
   and p5).
 
 ## A note on usage
@@ -119,12 +130,7 @@ documents require a Gartner subscription to read.
 
 | Theme | Document | ID |
 | --- | --- | --- |
-| Canonical definitions, overlap and governance | Executive Essentials: Navigating AI Agents and Agentic AI for CSP CIOs | [G00833514][g1] |
-| Plain-language explainer and cost misconception | What Are AI Agents and Agentic AI for Service and Support | [G00854682][g2] |
-| Autonomy levels and proportional governance | Avoid Governance Mismatch: Classify AI Agents by Autonomy Level | [G00846081][g3] |
-| Market maturity and distinction from generative AI | Hype Cycle for Agentic AI, 2026 | [G00842058][g4] |
-
-[g1]: https://www.gartner.com/document/833514
-[g2]: https://www.gartner.com/document/854682
-[g3]: https://www.gartner.com/document/846081
-[g4]: https://www.gartner.com/document/842058
+| Canonical definitions, overlap and governance | Executive Essentials: Navigating AI Agents and Agentic AI for CSP CIOs | G00833514 |
+| Plain-language explainer and cost misconception | What Are AI Agents and Agentic AI for Service and Support | G00854682 |
+| Autonomy levels and proportional governance | Avoid Governance Mismatch: Classify AI Agents by Autonomy Level | G00846081 |
+| Market maturity and distinction from generative AI | Hype Cycle for Agentic AI, 2026 | G00842058 |
