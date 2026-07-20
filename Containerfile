@@ -15,6 +15,11 @@ RUN npm install -g @github/copilot
 RUN mkdir -p /root/.copilot \
     && printf '{\n  "includeCoAuthoredBy": false\n}\n' > /root/.copilot/settings.json
 
+# Default MCP servers: expose the weather_starter SQLite DB via mcp-sqlite.
+# Added for the "Module 4 - Making it an Agent" exercise.
+RUN mkdir -p /root/.copilot \
+    && printf '{\n  "mcpServers": {\n    "sqlite": {\n      "type": "local",\n      "command": "npx",\n      "args": ["-y", "mcp-sqlite", "projects/weather_starter/backend/weather.db"],\n      "tools": ["*"]\n    }\n  }\n}\n' > /root/.copilot/mcp-config.json
+
 # The whole aixtech repo is bind-mounted here at runtime (-v ./:/workspace), so
 # weather_starter lives at /workspace/projects/weather_starter. No source or
 # node_modules are baked in; install dependencies at runtime as needed.
