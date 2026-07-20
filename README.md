@@ -60,15 +60,17 @@ podman build -t aixtech-dev -f Containerfile .
 Run from **inside the repository root (`aixtech/`)** and bind-mount the whole repo
 into the container. Podman requires the mount source to be an absolute path or one
 that begins with `./`, so `./` resolves to the repo only when this is your working
-directory. The weather_starter dev server is published on port **3000**, and the
-MCP Inspector UI on port **6274**:
+directory. The weather_starter dev server is published on port **3000**, the MCP Inspector
+UI on port **6274**, and the MCP Inspector proxy on port **6277**:
 
 ```bash
-podman run -it --rm -p 3000:3000 -p 6274:6274 -v ./:/workspace aixtech-dev
+podman run -it --rm -p 3000:3000 -p 6274:6274 -p 6277:6277 -v ./:/workspace aixtech-dev
 ```
 
-Port **6274** is published so the MCP Inspector UI is reachable from your host
-browser at `http://localhost:6274` when you run it inside the container.
+Ports **6274** and **6277** are both published so the MCP Inspector works from your
+host browser at `http://localhost:6274` when you run it inside the container. The UI
+(6274) talks to the Inspector proxy (6277), so both must be reachable or the UI shows
+"Error Connecting to MCP Inspector Proxy".
 
 (Equivalently, `-v "$(pwd)":/workspace`. If you run from elsewhere, pass the
 absolute path to the repo instead of `./`.)
