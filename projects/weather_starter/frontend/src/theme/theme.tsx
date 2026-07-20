@@ -58,6 +58,11 @@ export const THEMES: Theme[] = [
     label: 'Sunrise Warm',
     description: 'A warm dawn gradient of plum, coral, and amber with an amber accent.',
   },
+  {
+    id: 'ocean',
+    label: 'Ocean Deep',
+    description: 'Deep sea gradient of teal and abyssal blue with an aqua accent.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';

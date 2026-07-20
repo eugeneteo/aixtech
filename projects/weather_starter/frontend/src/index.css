@@ -65,6 +65,35 @@ body {
 }
 
 /*
+ * Theme: ocean deep (a deep sea gradient with an aqua accent).
+ * A dark theme, so the white glass and text ramp are kept; this block swaps the
+ * backdrop for teal-to-abyssal blue and tints the accents aqua.
+ */
+[data-theme='ocean'] body {
+  @apply text-white;
+  background:
+    radial-gradient(80% 55% at 78% 0%, rgba(45, 212, 191, 0.24) 0%, transparent 58%),
+    radial-gradient(70% 55% at 12% 12%, rgba(56, 189, 248, 0.20) 0%, transparent 60%),
+    linear-gradient(170deg, #0e4f5c 0%, #0a3a4c 35%, #06263b 70%, #03141f 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+[data-theme='ocean'] .bg-white\/20 {
+  background-color: rgba(45, 212, 191, 0.2);
+}
+[data-theme='ocean'] .border-white\/30 {
+  border-color: rgba(45, 212, 191, 0.7);
+}
+[data-theme='ocean'] button:focus-visible,
+[data-theme='ocean'] input:focus-visible,
+[data-theme='ocean'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(45, 212, 191, 0.7);
+}
+[data-theme='ocean'] ::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.3);
+}
+
+/*
  * Theme: cupertino light (crisp white cards on an off-white daytime backdrop).
  * The base components use translucent white glass, which only reads on a dark
  * background. This block retargets the utility classes those components use so
