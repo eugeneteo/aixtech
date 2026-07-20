@@ -73,6 +73,11 @@ export const THEMES: Theme[] = [
     label: 'Pastel Soft',
     description: 'Gentle pastel gradient with rounded cards, soft shadows, and a calm low-contrast palette.',
   },
+  {
+    id: 'synthwave',
+    label: 'Synthwave Grid',
+    description: 'Retro 1980s neon over a deep purple sky with a glowing grid and a hot-magenta accent.',
+  },
 ];
 
 export const DEFAULT_THEME_ID = 'apple';

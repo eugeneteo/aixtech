@@ -94,6 +94,38 @@ body {
 }
 
 /*
+ * Theme: synthwave grid (retro 1980s neon over a deep purple sky).
+ * A dark theme, so the white glass and text ramp are kept; this block swaps the
+ * backdrop for a deep purple gradient with magenta and cyan glows and a faint
+ * neon grid, and tints the accents hot magenta.
+ */
+[data-theme='synthwave'] body {
+  @apply text-white;
+  background:
+    radial-gradient(65% 45% at 20% 6%, rgba(244, 63, 199, 0.24) 0%, transparent 58%),
+    radial-gradient(60% 45% at 85% 4%, rgba(56, 189, 248, 0.20) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, rgba(244, 63, 199, 0.08) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.07) 0 1px, transparent 1px 46px),
+    linear-gradient(170deg, #2a1250 0%, #1e0f3d 40%, #140a2c 72%, #0b0620 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+[data-theme='synthwave'] .bg-white\/20 {
+  background-color: rgba(244, 63, 199, 0.22);
+}
+[data-theme='synthwave'] .border-white\/30 {
+  border-color: rgba(244, 63, 199, 0.75);
+}
+[data-theme='synthwave'] button:focus-visible,
+[data-theme='synthwave'] input:focus-visible,
+[data-theme='synthwave'] .focus-visible\:ring-white\/40:focus-visible {
+  --tw-ring-color: rgba(244, 63, 199, 0.75);
+}
+[data-theme='synthwave'] ::-webkit-scrollbar-thumb {
+  background: rgba(244, 63, 199, 0.35);
+}
+
+/*
  * Theme: cupertino light (crisp white cards on an off-white daytime backdrop).
  * The base components use translucent white glass, which only reads on a dark
  * background. This block retargets the utility classes those components use so

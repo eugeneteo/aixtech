@@ -57,6 +57,7 @@ These themes are live in the selector.
 | 8 | Ocean Deep | Dark | Deep sea gradient of teal and abyssal blue with an aqua accent. |
 | 9 | Forecast Newsprint | Light | Editorial newspaper look: off-white stock, serif type, ruled dividers, and a restrained ink-red accent. |
 | 10 | Pastel Soft | Light | Gentle pastel gradient with rounded cards, soft shadows, and a calm low-contrast palette. |
+| 11 | Synthwave Grid | Dark | Retro 1980s neon over a deep purple sky with a glowing grid and a hot-magenta accent. |
 
 ### Design considerations, theme by theme
 
@@ -92,6 +93,9 @@ These themes are live in the selector.
   soft lavender, mint, and peach pastels, a muted indigo-slate text ramp to keep contrast
   calm, and clean white cards with extra corner rounding and soft shadows for a friendly
   feel. A soft lilac accent marks the selected card, focus rings, and scrollbar.
+- **Synthwave Grid.** A dark retro-1980s theme: a deep purple sky gradient lit by magenta
+  and cyan glows and a faint neon grid drawn with repeating gradients, keeping the white
+  glass legible, with a hot-magenta accent on the selected card, focus rings, and scrollbar.
 
 ## Proposed themes
 
@@ -102,7 +106,6 @@ full utility-class override.
 
 | # | Theme | Kind | Intended direction |
 | --- | --- | --- | --- |
-| 11 | Synthwave Grid | Dark | Retro 1980s neon: deep purple sky, magenta and cyan glows, grid motif, bright neon accent. |
 | 12 | Nordic Calm | Light | Muted Scandinavian palette, plenty of whitespace, thin borders, understated blue-grey accent. |
 | 13 | Sunny Meadow | Light | Bright daytime greens and sky blues, cheerful warm accent, friendly rounded cards. |
 | 14 | Slate Pro | Dark | Restrained professional dashboard: neutral slate greys, subtle borders, a single measured accent, compact density. |
@@ -113,4 +116,4 @@ full utility-class override.
 - Apple saved as the baseline theme, and the theme selector added.
 - Implemented, in list order: Aurora Glass, Cupertino Light, Midnight Mono, Terminal
   Green, Paper Almanac, Neo-Brutalist, Sunrise Warm, Ocean Deep, Forecast Newsprint,
-  Pastel Soft.
+  Pastel Soft, Synthwave Grid.
