@@ -11,6 +11,11 @@ RUN apt-get update \
 # GitHub Copilot CLI, installed globally so `copilot` is on PATH.
 RUN npm install -g @github/copilot
 
+# mcporter: a CLI and TypeScript toolkit for the Model Context Protocol. It discovers the
+# MCP servers configured on this image (see the sqlite server below) and lets you call
+# their tools from the shell or scripts. Installed globally so `mcporter` is on PATH.
+RUN npm install -g mcporter
+
 # Default Copilot CLI settings: omit the Co-authored-by: Copilot commit trailer.
 RUN mkdir -p /root/.copilot \
     && printf '{\n  "includeCoAuthoredBy": false\n}\n' > /root/.copilot/settings.json
