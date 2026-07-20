@@ -9,6 +9,21 @@ allowed-tools: shell
 Drive Chrome DevTools through the MCPorter CLI to inspect local web pages, capture
 screenshots, review network traffic, and run Lighthouse audits.
 
+## Register the server
+
+Register the Chrome DevTools MCP server with MCPorter once, then confirm it is available:
+
+```bash
+# Add the server to config/mcporter.json
+mcporter config add chrome-devtools --command "npx -y chrome-devtools-mcp@latest"
+
+# Start the daemon that hosts the configured servers
+mcporter daemon start
+
+# List the server's tools to confirm registration
+mcporter list chrome-devtools
+```
+
 ## Check the daemon first
 
 Before running any command, confirm the MCPorter daemon is running:
@@ -57,8 +72,6 @@ mcporter call chrome-devtools.lighthouse_audit
   mcporter cannot find the server and times out starting its own daemon.
 - To see every available tool and its parameters, run
   `mcporter list chrome-devtools`.
-- The `chrome-devtools` server is configured in `config/mcporter.json`; add it with
-  `mcporter config add chrome-devtools --command "npx -y chrome-devtools-mcp@latest"`.
 - The container image installs Chromium and a headless, no-sandbox shim at
   `/opt/google/chrome/chrome` (see the `Containerfile`), so the default server config
   works without extra flags.
