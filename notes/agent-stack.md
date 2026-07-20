@@ -47,6 +47,10 @@ packaging
 workflows into modules the agent loads only when it needs them. An agent with ten skills
 does not carry all ten at once. It pulls in the relevant one, uses it, and moves on.
 
+Skills are also more than a way to wrap tool calls. They package repeatable workflows,
+guardrails, and project-specific habits, so the agent applies them the same way every
+time rather than working each case out afresh.
+
 ## Subagents
 
 Even a well-equipped agent eventually hits a ceiling. Long tasks fill the context window,
