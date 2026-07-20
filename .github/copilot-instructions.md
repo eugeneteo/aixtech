@@ -16,6 +16,8 @@ React/Vite, Drizzle over SQLite). Treat that directory as the working root.
 - Backend TypeScript imports local modules with an explicit `.js` extension (for example
   `import { logger } from './logger.js'`), even though the source is `.ts`, or the build
   breaks.
+- Write git commit messages with an imperative, capitalised subject and no type prefix
+  (not `docs:` or `notes:`), usually followed by a body paragraph explaining the change.
 
 ## Detail (progressive disclosure)
 
