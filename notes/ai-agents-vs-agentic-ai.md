@@ -12,8 +12,8 @@ state.
 
 ## The core distinction
 
-The two terms are not interchangeable. An AI agent is a building block; agentic AI is the
-approach that puts one or more of those blocks to work.
+Start with how the sources define each term. An AI agent is the acting unit; agentic AI is
+the wider approach that stands one or more of those units up as a system.
 
 - **AI agent.** "Autonomous or semi-autonomous software entities that use AI techniques to
   perceive, make decisions, take actions and achieve goals in their digital or physical
@@ -74,9 +74,10 @@ assembles agents into a goal-driven system and typically operates at higher auto
 ## How the framings line up
 
 The academic taxonomy, the Gartner framing and IMDA's definitions agree on the essentials:
-an AI agent is the acting unit, and agentic AI is the broader approach that puts one or
-more of those agents to work at higher autonomy. They differ only in emphasis. The academic
-paper draws the line by structure, a single agent versus several orchestrated agents;
+an AI agent is the acting unit, and agentic AI is the broader approach that coordinates one
+or more of those agents into a goal-driven system. They differ only in emphasis. The
+academic paper draws the line by structure, a single agent versus several orchestrated
+agents;
 Gartner draws it by autonomy and scope; and IMDA, writing for governance, stresses that an
 agentic AI system may run one agent or many, individually or in collaboration. Gartner also
 notes that capable single agents already plan, define goals and seek them (G00833514, p2),
