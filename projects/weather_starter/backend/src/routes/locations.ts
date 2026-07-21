@@ -48,22 +48,13 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
         return;
       }
 
-      const location = await createLocation(latitude, longitude);
-
       try {
-        const snapshot = await weatherClient.getCurrentWeather(
-          location.latitude,
-          location.longitude,
-        );
-        const updated = await updateWeather(location.id, snapshot);
-        response.status(201).json(updated ?? location);
+        const snapshot = await weatherClient.getCurrentWeather(latitude, longitude);
+        const location = await createLocation(latitude, longitude, snapshot);
+        response.status(201).json(location);
       } catch (error) {
         if (!(error instanceof WeatherProviderError)) throw error;
-        await deleteLocation(location.id);
-        logger.warn(
-          { err: error, locationId: location.id },
-          'weather refresh failed after location create',
-        );
+        logger.warn({ err: error }, 'weather fetch failed before location create');
         response.status(502).json({ detail: error.message });
       }
     } catch (error) {

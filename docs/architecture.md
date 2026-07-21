@@ -23,15 +23,14 @@ client, and forward unexpected failures with `next(error)` to the central error 
 
 Data uses a snapshot pattern rather than live-fetching on every read:
 
-1. Creating a location saves coordinates with a placeholder.
-2. The backend immediately refreshes from data.gov.sg and stores the latest snapshot.
+1. Creating a location fetches its initial weather from data.gov.sg.
+2. The backend saves the coordinates and initial snapshot together.
 3. Listing reads from SQLite.
 4. Manual refresh re-fetches and overwrites the stored snapshot.
 
 Partial provider failures leave only the affected metrics unavailable. If every provider
 call fails, refresh returns 502 and preserves the last saved snapshot. Initial creation
-removes its placeholder before returning 502, so a failed attempt does not leave a
-location that blocks a retry.
+returns 502 without inserting a location, so a failed attempt does not block a retry.
 
 Weather comes from `api-open.data.gov.sg` via `SingaporeWeatherClient` in `weather.ts`;
 `WEATHER_API_KEY` is optional (higher rate limits only).

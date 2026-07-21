@@ -67,7 +67,11 @@ export async function listLocations(): Promise<LocationRecord[]> {
   ).map(rowToRecord);
 }
 
-export async function createLocation(latitude: number, longitude: number): Promise<LocationRecord> {
+export async function createLocation(
+  latitude: number,
+  longitude: number,
+  initialWeather: WeatherSnapshot = defaultWeather,
+): Promise<LocationRecord> {
   const duplicate = await db
     .select({ id: locations.id })
     .from(locations)
@@ -79,7 +83,7 @@ export async function createLocation(latitude: number, longitude: number): Promi
   }
 
   const createdAt = new Date().toISOString().slice(0, 19);
-  const weather = weatherToColumns(defaultWeather);
+  const weather = weatherToColumns(initialWeather);
   try {
     const row = await db
       .insert(locations)
