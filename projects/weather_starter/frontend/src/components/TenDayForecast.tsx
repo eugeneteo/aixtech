@@ -11,9 +11,15 @@ interface WeekRange {
 }
 
 function labelForDate(date: string, index: number): string {
-  const parsed = new Date(date);
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+  const parsed = dateOnly
+    ? new Date(Date.UTC(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3])))
+    : new Date(date);
   if (Number.isNaN(parsed.getTime())) return index === 0 ? 'Today' : date;
-  return new Intl.DateTimeFormat([], { weekday: 'short' }).format(parsed);
+  return new Intl.DateTimeFormat([], {
+    weekday: 'short',
+    timeZone: 'Asia/Singapore',
+  }).format(parsed);
 }
 
 function formatTemperature(value: number | null | undefined): string {
