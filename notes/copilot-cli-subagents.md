@@ -38,6 +38,32 @@ configuration, followed by the agent's prompt.
 3. Write the prompt below the frontmatter. This defines the agent's behaviour, expertise, and
    instructions, up to 30,000 characters.
 
+### Tool aliases for the `tools` field
+
+The `tools` field accepts built-in aliases, MCP tools, or both. The aliases are case
+insensitive and each covers a group of underlying tools:
+
+| Alias | Compatible aliases | Purpose |
+| --- | --- | --- |
+| `execute` | `shell`, `Bash`, `powershell` | Run a command in the shell. |
+| `read` | `Read`, `NotebookRead` | Read file contents. |
+| `edit` | `Edit`, `MultiEdit`, `Write`, `NotebookEdit` | Create or modify files. |
+| `search` | `Grep`, `Glob` | Search for files or text in files. |
+| `agent` | `custom-agent`, `Task` | Invoke another custom agent to do a task. |
+| `web` | `WebSearch`, `WebFetch` | Fetch a URL or run a web search. |
+| `todo` | `TodoWrite` | Create and manage structured task lists. |
+
+Configure the field in one of these ways:
+
+- Omit `tools`, or use `tools: ["*"]`, to grant every available tool.
+- List specific aliases, for example `tools: ["read", "search"]`, to grant only those.
+- Use an empty list, `tools: []`, to grant none.
+- Reference an MCP server's tools by name, `some-server/some-tool`, or a whole server with
+  `some-server/*`.
+
+Unrecognised names are ignored, so a profile can list product-specific tools without
+breaking in environments that lack them.
+
 ### Where the profile lives
 
 The location decides the scope. On a naming conflict the higher scope wins, so a
@@ -96,3 +122,5 @@ models, and `/fleet` enables parallel subagent execution.
   <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli>
 - GitHub Docs, "Creating custom agents":
   <https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/create-custom-agents>
+- GitHub Docs, "Custom agents configuration" (Tool aliases):
+  <https://docs.github.com/en/copilot/reference/custom-agents-configuration>
