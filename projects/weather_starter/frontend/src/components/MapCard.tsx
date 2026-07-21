@@ -39,20 +39,14 @@ function pinIcon(location: Location, isSelected: boolean): L.DivIcon {
   return L.divIcon({ html, className: '', iconSize: [0, 0], iconAnchor: [0, 0] });
 }
 
-function FitToLocations({
-  locations,
-  selectedId,
-}: {
-  locations: Location[];
-  selectedId: number | null;
-}) {
+function FitToLocations({ locations }: { locations: Location[] }) {
   const map = useMap();
   const key = useMemo(
     () =>
-      `${selectedId ?? 'none'}#${locations
-        .map((l) => `${l.id}:${l.latitude},${l.longitude}`)
-        .join('|')}`,
-    [locations, selectedId],
+      locations
+        .map((location) => `${location.id}:${location.latitude},${location.longitude}`)
+        .join('|'),
+    [locations],
   );
 
   useEffect(() => {
@@ -68,7 +62,7 @@ function FitToLocations({
       locations.map((l) => [l.latitude, l.longitude] as [number, number]),
     );
     map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13, animate: true });
-    // key intentionally drives refit when the location set OR selection changes
+    // key intentionally drives refit only when location coordinates change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, key]);
 
@@ -90,7 +84,7 @@ function LocationsMap({ className }: { className?: string }) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <FitToLocations locations={locations} selectedId={selectedId} />
+      <FitToLocations locations={locations} />
       {locations.map((location) => (
         <Marker
           key={location.id}
