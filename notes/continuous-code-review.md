@@ -65,3 +65,23 @@ roborev init   # install the post-commit hook
 # do some work, generate commits
 roborev tui    # browse reviews in the terminal UI
 ```
+
+## Why it exists: agent ergonomics
+
+RoboRev is built by Wes McKinney, and his essay
+[Agent Ergonomics](https://wesmckinney.com/blog/agent-ergonomics/) sets out the thinking
+behind it. His repository at `github.com/wesm/roborev` redirects to the current home at
+`github.com/kenn-io/roborev`.
+
+His argument is that agentic engineering changes what matters in a codebase. Agents compile
+and test one to two orders of magnitude more often than people, so fast build and test
+cycles and easy, dependency-free distribution now count for more than the human readability
+that made languages like Python pleasant to write. That shift favours compiled languages
+such as Go and Rust for agent-authored tools, RoboRev among them.
+
+Continuous review is the other half of that trade. McKinney notes he built RoboRev partly
+because an agent's commits carry bugs, and partly because he is less effective at manually
+reviewing Go or Rust, languages he did not use before adopting agents. Automated review
+after each commit is what makes agent-generated code in less familiar languages good enough
+to ship, so the tool and the essay describe two sides of the same loop: let the agent write
+fast in a compiled language, and lean on automated review to keep quality up.
