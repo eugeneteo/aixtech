@@ -165,6 +165,39 @@ describe('locations API', () => {
     expect(weatherCalls).toBe(0);
   });
 
+  it('returns 409 when a duplicate appears while weather is being fetched', async () => {
+    const payload = { latitude: 1.28, longitude: 103.78 };
+    let signalStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      signalStarted = resolve;
+    });
+    let rejectWeather!: (error: Error) => void;
+    const pendingWeather = new Promise<WeatherSnapshot>((_resolve, reject) => {
+      rejectWeather = reject;
+    });
+    const { createApp } = await import('../server.js');
+    const delayedApp = await createApp({
+      serveFrontend: false,
+      enableRequestLogging: false,
+      weatherClient: {
+        async getCurrentWeather() {
+          signalStarted();
+          return pendingWeather;
+        },
+      },
+    });
+
+    const delayedCreate = request(delayedApp)
+      .post('/api/locations')
+      .send(payload)
+      .then((response) => response);
+    await started;
+    await request(app).post('/api/locations').send(payload).expect(201);
+    rejectWeather(new WeatherProviderError('Unable to retrieve weather data'));
+
+    expect((await delayedCreate).status).toBe(409);
+  });
+
   it('returns 404 when a location is deleted while refresh is in flight', async () => {
     const created = await request(app)
       .post('/api/locations')

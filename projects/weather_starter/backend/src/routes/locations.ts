@@ -56,6 +56,7 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
         response.status(201).json(location);
       } catch (error) {
         if (!(error instanceof WeatherProviderError)) throw error;
+        await ensureLocationAvailable(latitude, longitude);
         logger.warn({ err: error }, 'weather fetch failed before location create');
         response.status(502).json({ detail: error.message });
       }
