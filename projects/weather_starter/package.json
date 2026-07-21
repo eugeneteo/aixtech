@@ -8,6 +8,8 @@
     "dev": "node scripts/dev.mjs",
     "dev:server": "tsx watch backend/src/server.ts",
     "build": "npm run build -w frontend && tsc -p backend/tsconfig.json",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "start": "node scripts/start.mjs",
     "doctor": "node scripts/doctor.mjs",
     "reset": "node scripts/reset.mjs",
