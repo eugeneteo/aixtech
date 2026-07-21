@@ -32,6 +32,17 @@ RUN mkdir -p /opt/google/chrome \
     && printf '#!/bin/sh\nexec /usr/bin/chromium --no-sandbox --headless=new --disable-gpu --disable-dev-shm-usage "$@"\n' > /opt/google/chrome/chrome \
     && chmod +x /opt/google/chrome/chrome
 
+# agent-browser: Vercel Labs' native (Rust) browser-automation CLI for AI agents. Installed
+# globally so `agent-browser` is on PATH (Node 24, this base image, meets its Node 24+ need).
+# `agent-browser install` fetches a Chrome for Testing build, but that channel ships no
+# Linux ARM64 binary, so on this arm64 image the download is expected to fail; we tolerate it
+# and instead point agent-browser at the Debian chromium already installed above. The launch
+# args match the chrome shim (rootful, display-less container).
+RUN npm install -g agent-browser \
+    && (agent-browser install || echo 'agent-browser install skipped: no Chrome for Testing arm64 build; using system chromium')
+ENV AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium \
+    AGENT_BROWSER_ARGS=--no-sandbox,--headless=new,--disable-gpu,--disable-dev-shm-usage
+
 # Default Copilot CLI settings: omit the Co-authored-by: Copilot commit trailer.
 RUN mkdir -p /root/.copilot \
     && printf '{\n  "includeCoAuthoredBy": false\n}\n' > /root/.copilot/settings.json
