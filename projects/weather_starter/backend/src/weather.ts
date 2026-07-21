@@ -188,22 +188,19 @@ export class SingaporeWeatherClient {
         this.snapshotFromPayload(payload, latitude, longitude),
       ),
     );
-    const base = forecastResult.ok
-      ? forecastResult.value
-      : this.emptyForecastSnapshot();
+    const base = forecastResult.ok ? forecastResult.value : this.emptyForecastSnapshot();
 
-    const results =
-      await Promise.all([
-        providerResult(this.fetchNearestReading('air-temperature', latitude, longitude)),
-        providerResult(this.fetchNearestReading('relative-humidity', latitude, longitude)),
-        providerResult(this.fetchNearestReading('rainfall', latitude, longitude)),
-        providerResult(this.fetchNearestReading('wind-speed', latitude, longitude)),
-        providerResult(this.fetchNearestReading('wind-direction', latitude, longitude)),
-        providerResult(this.fetchUvIndex()),
-        providerResult(this.fetchAirQuality(latitude, longitude)),
-        providerResult(this.fetchTwentyFourHourForecast(latitude, longitude)),
-        providerResult(this.fetchFourDayForecast()),
-      ]);
+    const results = await Promise.all([
+      providerResult(this.fetchNearestReading('air-temperature', latitude, longitude)),
+      providerResult(this.fetchNearestReading('relative-humidity', latitude, longitude)),
+      providerResult(this.fetchNearestReading('rainfall', latitude, longitude)),
+      providerResult(this.fetchNearestReading('wind-speed', latitude, longitude)),
+      providerResult(this.fetchNearestReading('wind-direction', latitude, longitude)),
+      providerResult(this.fetchUvIndex()),
+      providerResult(this.fetchAirQuality(latitude, longitude)),
+      providerResult(this.fetchTwentyFourHourForecast(latitude, longitude)),
+      providerResult(this.fetchFourDayForecast()),
+    ]);
     if (!forecastResult.ok && results.every((result) => !result.ok)) {
       throw new WeatherProviderError('Unable to retrieve weather data');
     }

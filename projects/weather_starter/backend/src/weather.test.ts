@@ -127,10 +127,26 @@ const fourDayPayload = {
       update_timestamp: '2026-07-17T09:41:17+08:00',
       timestamp: '2026-07-17T09:28:00+08:00',
       forecasts: [
-        { date: '2026-07-18', forecast: 'Afternoon thundery showers', temperature: { low: 25, high: 34 } },
-        { date: '2026-07-19', forecast: 'Afternoon thundery showers', temperature: { low: 25, high: 34 } },
-        { date: '2026-07-20', forecast: 'Late morning showers', temperature: { low: 25, high: 33 } },
-        { date: '2026-07-21', forecast: 'Late morning showers', temperature: { low: 25, high: 33 } },
+        {
+          date: '2026-07-18',
+          forecast: 'Afternoon thundery showers',
+          temperature: { low: 25, high: 34 },
+        },
+        {
+          date: '2026-07-19',
+          forecast: 'Afternoon thundery showers',
+          temperature: { low: 25, high: 34 },
+        },
+        {
+          date: '2026-07-20',
+          forecast: 'Late morning showers',
+          temperature: { low: 25, high: 33 },
+        },
+        {
+          date: '2026-07-21',
+          forecast: 'Late morning showers',
+          temperature: { low: 25, high: 33 },
+        },
       ],
     },
   ],
@@ -334,7 +350,14 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
   it('degrades per-metric without cascading when some endpoints fail', async () => {
     vi.stubGlobal(
       'fetch',
-      stubFetch({ humidity: null, windSpeed: null, windDir: null, uv: null, psi: null, pm25: null }),
+      stubFetch({
+        humidity: null,
+        windSpeed: null,
+        windDir: null,
+        uv: null,
+        psi: null,
+        pm25: null,
+      }),
     );
 
     const snapshot = await client.getCurrentWeather(QUERY_LAT, QUERY_LON);

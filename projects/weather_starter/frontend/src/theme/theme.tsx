@@ -66,17 +66,20 @@ export const THEMES: Theme[] = [
   {
     id: 'newsprint',
     label: 'Forecast Newsprint',
-    description: 'Editorial newspaper look with serif type, ruled dividers, and a restrained ink-red accent.',
+    description:
+      'Editorial newspaper look with serif type, ruled dividers, and a restrained ink-red accent.',
   },
   {
     id: 'pastel',
     label: 'Pastel Soft',
-    description: 'Gentle pastel gradient with rounded cards, soft shadows, and a calm low-contrast palette.',
+    description:
+      'Gentle pastel gradient with rounded cards, soft shadows, and a calm low-contrast palette.',
   },
   {
     id: 'synthwave',
     label: 'Synthwave Grid',
-    description: 'Retro 1980s neon over a deep purple sky with a glowing grid and a hot-magenta accent.',
+    description:
+      'Retro 1980s neon over a deep purple sky with a glowing grid and a hot-magenta accent.',
   },
 ];
 

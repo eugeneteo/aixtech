@@ -97,10 +97,7 @@ export async function createLocation(
   }
 }
 
-export async function ensureLocationAvailable(
-  latitude: number,
-  longitude: number,
-): Promise<void> {
+export async function ensureLocationAvailable(latitude: number, longitude: number): Promise<void> {
   const duplicate = await db
     .select({ id: locations.id })
     .from(locations)
@@ -140,9 +137,7 @@ export async function resetStore(): Promise<void> {
 function isDuplicateLocationConstraint(error: unknown): boolean {
   return (
     error instanceof Error &&
-    error.message.includes(
-      'UNIQUE constraint failed: locations.latitude, locations.longitude',
-    )
+    error.message.includes('UNIQUE constraint failed: locations.latitude, locations.longitude')
   );
 }
 

@@ -23,8 +23,7 @@ function escapeHtml(value: string): string {
 function pinIcon(location: Location, isSelected: boolean): L.DivIcon {
   const temp = formatTemperature(location.weather?.temperature_c);
   const place =
-    location.weather?.area ||
-    `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}`;
+    location.weather?.area || `${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)}`;
   const detail = location.weather?.condition || place;
   const label = escapeHtml(`${temp} · ${detail}`);
   const dotColour = isSelected ? '#0a84ff' : '#334155';
