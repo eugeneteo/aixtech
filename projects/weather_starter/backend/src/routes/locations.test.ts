@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import type { WeatherSnapshot } from '../weather.js';
+import { WeatherProviderError, type WeatherSnapshot } from '../weather.js';
 
 const weather: WeatherSnapshot = {
   condition: 'Cloudy',
@@ -91,5 +91,89 @@ describe('locations API', () => {
 
   it('returns 404 when deleting a location that does not exist', async () => {
     await request(app).delete('/api/locations/999999').expect(404);
+  });
+
+  it('rejects malformed location IDs consistently', async () => {
+    const detail = { detail: 'locationId must be a positive integer' };
+
+    expect((await request(app).get('/api/locations/not-a-number').expect(422)).body).toEqual(
+      detail,
+    );
+    expect((await request(app).post('/api/locations/1.5/refresh').expect(422)).body).toEqual(
+      detail,
+    );
+    expect((await request(app).delete('/api/locations/0').expect(422)).body).toEqual(detail);
+  });
+
+  it('returns one conflict for concurrent duplicate creates', async () => {
+    const payload = { latitude: 1.24, longitude: 103.74 };
+    const responses = await Promise.all([
+      request(app).post('/api/locations').send(payload),
+      request(app).post('/api/locations').send(payload),
+    ]);
+
+    expect(responses.map((response) => response.status).sort()).toEqual([201, 409]);
+  });
+
+  it('removes a new location when its initial weather fetch fails completely', async () => {
+    const { createApp } = await import('../server.js');
+    const failedApp = await createApp({
+      serveFrontend: false,
+      enableRequestLogging: false,
+      weatherClient: {
+        async getCurrentWeather() {
+          throw new WeatherProviderError('Unable to retrieve weather data');
+        },
+      },
+    });
+    const payload = { latitude: 1.25, longitude: 103.75 };
+
+    await request(failedApp)
+      .post('/api/locations')
+      .send(payload)
+      .expect(502, { detail: 'Unable to retrieve weather data' });
+
+    const listResponse = await request(failedApp).get('/api/locations').expect(200);
+    expect(
+      listResponse.body.locations.some(
+        (location: { latitude: number; longitude: number }) =>
+          location.latitude === payload.latitude && location.longitude === payload.longitude,
+      ),
+    ).toBe(false);
+  });
+
+  it('returns 404 when a location is deleted while refresh is in flight', async () => {
+    const created = await request(app)
+      .post('/api/locations')
+      .send({ latitude: 1.26, longitude: 103.76 })
+      .expect(201);
+    let signalStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      signalStarted = resolve;
+    });
+    let resolveWeather!: (snapshot: WeatherSnapshot) => void;
+    const pendingWeather = new Promise<WeatherSnapshot>((resolve) => {
+      resolveWeather = resolve;
+    });
+    const { createApp } = await import('../server.js');
+    const raceApp = await createApp({
+      serveFrontend: false,
+      enableRequestLogging: false,
+      weatherClient: {
+        async getCurrentWeather() {
+          signalStarted();
+          return pendingWeather;
+        },
+      },
+    });
+
+    const refreshResponse = request(raceApp)
+      .post(`/api/locations/${created.body.id}/refresh`)
+      .then((response) => response);
+    await started;
+    await request(raceApp).delete(`/api/locations/${created.body.id}`).expect(204);
+    resolveWeather(weather);
+
+    expect((await refreshResponse).status).toBe(404);
   });
 });

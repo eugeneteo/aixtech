@@ -415,6 +415,29 @@ describe('SingaporeWeatherClient.getCurrentWeather (weather metrics)', () => {
     expect(snapshot.forecast_high_c).toBe(33);
   });
 
+  it('throws when every weather source fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      stubFetch({
+        twoHour: null,
+        airTemp: null,
+        humidity: null,
+        rainfall: null,
+        windSpeed: null,
+        windDir: null,
+        uv: null,
+        psi: null,
+        pm25: null,
+        dayForecast: null,
+        fourDay: null,
+      }),
+    );
+
+    await expect(client.getCurrentWeather(QUERY_LAT, QUERY_LON)).rejects.toThrow(
+      'Unable to retrieve weather data',
+    );
+  });
+
   it('does not regress the existing two-hr-sourced fields', async () => {
     vi.stubGlobal('fetch', stubFetch());
 
