@@ -4,6 +4,7 @@ import {
   createLocation,
   deleteLocation,
   DuplicateLocationError,
+  ensureLocationAvailable,
   getLocation,
   listLocations,
   updateWeather,
@@ -49,6 +50,7 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
       }
 
       try {
+        await ensureLocationAvailable(latitude, longitude);
         const snapshot = await weatherClient.getCurrentWeather(latitude, longitude);
         const location = await createLocation(latitude, longitude, snapshot);
         response.status(201).json(location);

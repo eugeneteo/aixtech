@@ -142,6 +142,29 @@ describe('locations API', () => {
     ).toBe(false);
   });
 
+  it('returns 409 for an existing location without calling the weather provider', async () => {
+    const payload = { latitude: 1.27, longitude: 103.77 };
+    await request(app).post('/api/locations').send(payload).expect(201);
+    let weatherCalls = 0;
+    const { createApp } = await import('../server.js');
+    const duplicateApp = await createApp({
+      serveFrontend: false,
+      enableRequestLogging: false,
+      weatherClient: {
+        async getCurrentWeather() {
+          weatherCalls += 1;
+          throw new WeatherProviderError('Unable to retrieve weather data');
+        },
+      },
+    });
+
+    await request(duplicateApp)
+      .post('/api/locations')
+      .send(payload)
+      .expect(409, { detail: 'Location already exists' });
+    expect(weatherCalls).toBe(0);
+  });
+
   it('returns 404 when a location is deleted while refresh is in flight', async () => {
     const created = await request(app)
       .post('/api/locations')

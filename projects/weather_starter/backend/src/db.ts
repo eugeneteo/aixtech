@@ -72,15 +72,7 @@ export async function createLocation(
   longitude: number,
   initialWeather: WeatherSnapshot = defaultWeather,
 ): Promise<LocationRecord> {
-  const duplicate = await db
-    .select({ id: locations.id })
-    .from(locations)
-    .where(and(eq(locations.latitude, latitude), eq(locations.longitude, longitude)))
-    .get();
-
-  if (duplicate) {
-    throw new DuplicateLocationError();
-  }
+  await ensureLocationAvailable(latitude, longitude);
 
   const createdAt = new Date().toISOString().slice(0, 19);
   const weather = weatherToColumns(initialWeather);
@@ -102,6 +94,21 @@ export async function createLocation(
       throw new DuplicateLocationError();
     }
     throw error;
+  }
+}
+
+export async function ensureLocationAvailable(
+  latitude: number,
+  longitude: number,
+): Promise<void> {
+  const duplicate = await db
+    .select({ id: locations.id })
+    .from(locations)
+    .where(and(eq(locations.latitude, latitude), eq(locations.longitude, longitude)))
+    .get();
+
+  if (duplicate) {
+    throw new DuplicateLocationError();
   }
 }
 
