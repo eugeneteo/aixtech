@@ -14,6 +14,13 @@ export interface LocationRecord {
   weather: WeatherSnapshot;
 }
 
+export class DuplicateLocationError extends Error {
+  constructor() {
+    super('Location already exists');
+    this.name = 'DuplicateLocationError';
+  }
+}
+
 type LocationRow = typeof locations.$inferSelect;
 
 const defaultWeather: WeatherSnapshot = {
@@ -68,25 +75,30 @@ export async function createLocation(latitude: number, longitude: number): Promi
     .get();
 
   if (duplicate) {
-    const error = new Error('Location already exists');
-    error.name = 'DuplicateLocationError';
-    throw error;
+    throw new DuplicateLocationError();
   }
 
   const createdAt = new Date().toISOString().slice(0, 19);
   const weather = weatherToColumns(defaultWeather);
-  const row = await db
-    .insert(locations)
-    .values({
-      latitude,
-      longitude,
-      createdAt,
-      ...weather,
-    })
-    .returning()
-    .get();
+  try {
+    const row = await db
+      .insert(locations)
+      .values({
+        latitude,
+        longitude,
+        createdAt,
+        ...weather,
+      })
+      .returning()
+      .get();
 
-  return rowToRecord(row);
+    return rowToRecord(row);
+  } catch (error) {
+    if (isDuplicateLocationConstraint(error)) {
+      throw new DuplicateLocationError();
+    }
+    throw error;
+  }
 }
 
 export async function getLocation(id: number): Promise<LocationRecord | null> {
@@ -112,6 +124,15 @@ export async function deleteLocation(id: number): Promise<boolean> {
 export async function resetStore(): Promise<void> {
   await db.delete(locations).run();
   sqlite.prepare("DELETE FROM sqlite_sequence WHERE name = 'locations'").run();
+}
+
+function isDuplicateLocationConstraint(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    error.message.includes(
+      'UNIQUE constraint failed: locations.latitude, locations.longitude',
+    )
+  );
 }
 
 function weatherToColumns(weather: WeatherSnapshot) {

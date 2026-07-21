@@ -3,6 +3,7 @@ import { Router as createRouter } from 'express';
 import {
   createLocation,
   deleteLocation,
+  DuplicateLocationError,
   getLocation,
   listLocations,
   updateWeather,
@@ -58,14 +59,15 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
         response.status(201).json(updated ?? location);
       } catch (error) {
         if (!(error instanceof WeatherProviderError)) throw error;
+        await deleteLocation(location.id);
         logger.warn(
           { err: error, locationId: location.id },
           'weather refresh failed after location create',
         );
-        response.status(201).json(location);
+        response.status(502).json({ detail: error.message });
       }
     } catch (error) {
-      if (error instanceof Error && error.name === 'DuplicateLocationError') {
+      if (error instanceof DuplicateLocationError) {
         logger.warn({ err: error }, 'duplicate location rejected');
         response.status(409).json({ detail: error.message });
         return;
@@ -76,7 +78,12 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
 
   router.get('/locations/:locationId', async (request, response, next) => {
     try {
-      const location = await getLocation(Number(request.params.locationId));
+      const locationId = parseLocationId(request.params.locationId);
+      if (locationId === null) {
+        response.status(422).json({ detail: 'locationId must be a positive integer' });
+        return;
+      }
+      const location = await getLocation(locationId);
       if (!location) {
         response.status(404).json({ detail: 'Location not found' });
         return;
@@ -89,7 +96,11 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
 
   router.post('/locations/:locationId/refresh', async (request, response, next) => {
     try {
-      const locationId = Number(request.params.locationId);
+      const locationId = parseLocationId(request.params.locationId);
+      if (locationId === null) {
+        response.status(422).json({ detail: 'locationId must be a positive integer' });
+        return;
+      }
       const location = await getLocation(locationId);
       if (!location) {
         response.status(404).json({ detail: 'Location not found' });
@@ -98,6 +109,10 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
 
       const snapshot = await weatherClient.getCurrentWeather(location.latitude, location.longitude);
       const updated = await updateWeather(locationId, snapshot);
+      if (!updated) {
+        response.status(404).json({ detail: 'Location not found' });
+        return;
+      }
       response.json(updated);
     } catch (error) {
       if (error instanceof WeatherProviderError) {
@@ -110,9 +125,9 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
 
   router.delete('/locations/:locationId', async (request, response, next) => {
     try {
-      const locationId = Number(request.params.locationId);
-      if (!Number.isInteger(locationId)) {
-        response.status(422).json({ detail: 'locationId must be an integer' });
+      const locationId = parseLocationId(request.params.locationId);
+      if (locationId === null) {
+        response.status(422).json({ detail: 'locationId must be a positive integer' });
         return;
       }
 
@@ -129,4 +144,9 @@ export function createLocationsRouter(options: LocationsRouterOptions = {}): Rou
   });
 
   return router;
+}
+
+function parseLocationId(value: string): number | null {
+  const locationId = Number(value);
+  return Number.isInteger(locationId) && locationId > 0 ? locationId : null;
 }

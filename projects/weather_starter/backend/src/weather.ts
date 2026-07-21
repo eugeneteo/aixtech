@@ -1,5 +1,7 @@
 export class WeatherProviderError extends Error {}
 
+type ProviderResult<T> = { ok: true; value: T } | { ok: false };
+
 interface ForecastPayload {
   code?: number;
   errorMsg?: string;
@@ -181,23 +183,51 @@ export class SingaporeWeatherClient {
   ) {}
 
   async getCurrentWeather(latitude: number, longitude: number): Promise<WeatherSnapshot> {
-    const forecastPayload = await this.fetchLatestForecastPayload().catch(() => null);
-    const base = forecastPayload
-      ? this.snapshotFromPayload(forecastPayload, latitude, longitude)
+    const forecastResult = await providerResult(
+      this.fetchLatestForecastPayload().then((payload) =>
+        this.snapshotFromPayload(payload, latitude, longitude),
+      ),
+    );
+    const base = forecastResult.ok
+      ? forecastResult.value
       : this.emptyForecastSnapshot();
 
-    const [temperature, humidity, rainfall, windSpeed, windDirection, uv, airQuality, dayForecast, fourDay] =
+    const results =
       await Promise.all([
-        this.fetchNearestReading('air-temperature', latitude, longitude).catch(() => null),
-        this.fetchNearestReading('relative-humidity', latitude, longitude).catch(() => null),
-        this.fetchNearestReading('rainfall', latitude, longitude).catch(() => null),
-        this.fetchNearestReading('wind-speed', latitude, longitude).catch(() => null),
-        this.fetchNearestReading('wind-direction', latitude, longitude).catch(() => null),
-        this.fetchUvIndex().catch(() => null),
-        this.fetchAirQuality(latitude, longitude).catch(() => null),
-        this.fetchTwentyFourHourForecast(latitude, longitude).catch(() => null),
-        this.fetchFourDayForecast().catch(() => null),
+        providerResult(this.fetchNearestReading('air-temperature', latitude, longitude)),
+        providerResult(this.fetchNearestReading('relative-humidity', latitude, longitude)),
+        providerResult(this.fetchNearestReading('rainfall', latitude, longitude)),
+        providerResult(this.fetchNearestReading('wind-speed', latitude, longitude)),
+        providerResult(this.fetchNearestReading('wind-direction', latitude, longitude)),
+        providerResult(this.fetchUvIndex()),
+        providerResult(this.fetchAirQuality(latitude, longitude)),
+        providerResult(this.fetchTwentyFourHourForecast(latitude, longitude)),
+        providerResult(this.fetchFourDayForecast()),
       ]);
+    if (!forecastResult.ok && results.every((result) => !result.ok)) {
+      throw new WeatherProviderError('Unable to retrieve weather data');
+    }
+
+    const [
+      temperatureResult,
+      humidityResult,
+      rainfallResult,
+      windSpeedResult,
+      windDirectionResult,
+      uvResult,
+      airQualityResult,
+      dayForecastResult,
+      fourDayResult,
+    ] = results;
+    const temperature = temperatureResult.ok ? temperatureResult.value : null;
+    const humidity = humidityResult.ok ? humidityResult.value : null;
+    const rainfall = rainfallResult.ok ? rainfallResult.value : null;
+    const windSpeed = windSpeedResult.ok ? windSpeedResult.value : null;
+    const windDirection = windDirectionResult.ok ? windDirectionResult.value : null;
+    const uv = uvResult.ok ? uvResult.value : null;
+    const airQuality = airQualityResult.ok ? airQualityResult.value : null;
+    const dayForecast = dayForecastResult.ok ? dayForecastResult.value : null;
+    const fourDay = fourDayResult.ok ? fourDayResult.value : null;
 
     return {
       ...base,
@@ -589,6 +619,13 @@ function valueForRegion(
   return numberOrNull(values[region]);
 }
 
+async function providerResult<T>(promise: Promise<T>): Promise<ProviderResult<T>> {
+  try {
+    return { ok: true, value: await promise };
+  } catch {
+    return { ok: false };
+  }
+}
 
 function defaultRegions(): RegionMetadata[] {
   return [
