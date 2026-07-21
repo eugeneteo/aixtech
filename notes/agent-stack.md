@@ -33,6 +33,10 @@ APIs, and other services, all through one standard protocol. Rather than buildin
 separate integration for every service, you configure one MCP server and the agent gains
 access through it.
 
+The official registry at <https://registry.modelcontextprotocol.io/> is where you discover
+published MCP servers. It catalogues each server's metadata and points to where the code
+lives, rather than hosting the servers itself.
+
 ## Skills
 
 The more an agent can do, the more instructions it needs, and every instruction spends
@@ -50,6 +54,11 @@ does not carry all ten at once. It pulls in the relevant one, uses it, and moves
 Skills are also more than a way to wrap tool calls. They package repeatable workflows,
 guardrails, and project-specific habits, so the agent applies them the same way every
 time rather than working each case out afresh.
+
+Vercel maintains a public skill registry at <https://www.skills.sh/>. Installing a skill
+from it takes one command. For example, install the Playwright skill using:
+
+    npx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli
 
 ## Subagents
 
